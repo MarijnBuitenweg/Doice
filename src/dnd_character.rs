@@ -18,7 +18,7 @@ pub struct Spell {
 }
 
 pub struct DndCharacter {
-    genStats:[usize; GENERALNAMES.len()],
+    genStats: [usize; GENERALNAMES.len()],
     status: [usize; STATUSNAMES.len()],
     stats: [usize; STATNAMES.len()],
     saves: [usize; STATNAMES.len()],
