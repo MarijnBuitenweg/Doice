@@ -124,6 +124,14 @@ fn interpret_args(args: Vec<&str>) -> Result<Roller, &'static str> {
         };
     }
 
-    Ok(Roller::new(dice_cnt, dice_type, dice_mod, modifier))
+    //Ok(Roller::new(dice_cnt, dice_type, dice_mod, modifier))
+    Ok(Roller::new(
+        dice_cnt,
+        dice_type,
+        dice_mod,
+        modifier,
+        false,
+        false,
+    ))
     
 }
