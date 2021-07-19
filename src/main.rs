@@ -10,7 +10,7 @@ mod clinterface;
 mod dnd_character;
 mod interpret;
 
-fn run_new() {
+fn bsc_test() {
     let term = Term::stdout();
     let opts = vec!["Meep", "Moop"];
     let chosen = Select::new()
@@ -20,6 +20,8 @@ fn run_new() {
     term.write_line(&chosen.to_string()).unwrap();
 }
 
+use clinterface::core::UI;
 fn main() {
-    run_new();
+    let mut ui = UI::new();
+    ui.run().unwrap();
 }
