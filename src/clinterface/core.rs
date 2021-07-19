@@ -50,8 +50,9 @@ impl UI {
 
     fn run_menu(&mut self) -> std::io::Result<usize> {
         //obtain user input
+        println!("{}", self.menus[self.current_screen as usize].prompt);
         let selection = Select::new()
-            .with_prompt(self.menus[self.current_screen as usize].prompt)
+            //.with_prompt(self.menus[self.current_screen as usize].prompt)
             .items(self.menus[self.current_screen as usize].items)
             .default(0)
             .interact()?;
