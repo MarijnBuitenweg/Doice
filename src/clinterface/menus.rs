@@ -4,7 +4,7 @@ use super::core::Menu;
 pub const MENU_ARRAY: [Menu; 1] = [
     Menu {
         prompt: "Welcome to Doice, a simple dice rolling program.",
-        items: &["Dice console", "Exit"],
-        mapping: &[-1, isize::MAX],
-    }
+        items: &["Dice console", "Load character", "Exit"],
+        mapping: &[-1, -2, isize::MAX],
+    },
 ];
