@@ -18,11 +18,11 @@ pub struct Spell {
 }
 
 pub struct DndCharacter {
-    genStats: [usize; GENERALNAMES.len()],
+    genStats: [Option<usize>; GENERALNAMES.len()],
     status: [usize; STATUSNAMES.len()],
-    stats: [usize; STATNAMES.len()],
-    saves: [usize; STATNAMES.len()],
-    skills: [usize; SKILLNAMES.len()],
+    stats: [Option<usize>; STATNAMES.len()],
+    saves: [Option<usize>; STATNAMES.len()],
+    skills: [Option<usize>; SKILLNAMES.len()],
     slots: [usize; 9],
     cantrips: Vec<Spell>,
     spells: Vec<Spell>,

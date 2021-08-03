@@ -1,8 +1,10 @@
 use std::io;
 use crate::dice_rolls;
+use console::Term;
 use rand;
+use super::super::core::AppData;
 
-pub fn dice_console(_: isize) -> Result<isize, &'static str> {
+pub fn dice_console(_: isize, _: &mut AppData, _: &mut Term) -> Result<isize, &'static str> {
     println!("Welcome to the dice console!\nDice format: (dice count)d(dice type)+(optional dice modifier) +(optional total modifier)");
 
     let mut buf = String::new();
