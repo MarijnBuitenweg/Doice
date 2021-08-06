@@ -19,7 +19,7 @@ pub const MENU_ARRAY: [Menu; 4] = [
     },
     Menu {
         prompt: "Special abilities that may or may not be tied to any specific character:",
-        items: &["Starsword bombardment", "Back"],
+        items: &["Starfury bombardment", "Back"],
         mapping: &[-3, 0]
     }
 ];

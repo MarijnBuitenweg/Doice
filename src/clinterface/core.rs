@@ -1,5 +1,6 @@
 use console::Term;
 use dialoguer::{Confirm, Select};
+use rand::prelude::ThreadRng;
 use super::menus::MENU_ARRAY;
 use super::activities::ACTIVITY_ARRAY;
 use crate::dnd_character::DndCharacter;
@@ -20,6 +21,7 @@ pub struct Activity  {
 
 pub struct AppData {
     pub character: Option<DndCharacter>,
+    pub rng: ThreadRng,
 }
 
 pub struct UI {
@@ -39,7 +41,10 @@ impl UI {
             past_screen: 0,
             current_screen: 0,
             term: Term::stdout(),
-            dat: AppData {character: None},
+            dat: AppData {
+                character: None,
+                rng: rand::thread_rng(),
+            },
         }
     }
 
