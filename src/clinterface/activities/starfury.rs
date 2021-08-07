@@ -1,10 +1,6 @@
 use std::io::Write;
 
-use console::{
-    Term,
-    Key,
-    style,
-};
+use console::{Key, StyledObject, Term, style};
 use dialoguer::Input;
 use rand::{Rng, prelude::ThreadRng};
 
@@ -170,12 +166,15 @@ fn yeeteors(pos: usize, num: usize, rng: &mut ThreadRng, term: &mut Term) -> Res
         return Err("Error: Invalid AREA_SIZE (it should be even).");
     }
 
+    println!("Below is a map of the affected area, the numbers show how many meteors hit each tile, the tile with the blue background is the tile occupied by the user (if the user has size 'medium').");
+
     if !term.features().colors_supported() {
         println!("Please note that color is not supported in this terminal, which means that the location of the user cannot be displayed");
     }
 
     let halfway = SQUARE_SIZE/2 as usize;
     let usr_pos = [halfway - 1 + (pos & 1), halfway - 1 + ((pos & 2) >> 1)];//[halfway - (pos & 1), halfway - 1 + (pos & 2)];
+    let usr_i = SQUARE_SIZE*usr_pos[1] + usr_pos[0];
 
     let mut map = [0; AREA_SIZE];
     for _ in 0..num {
@@ -183,15 +182,22 @@ fn yeeteors(pos: usize, num: usize, rng: &mut ThreadRng, term: &mut Term) -> Res
         map[hit] += 1;
     }
 
-    let mut num_text = vec![String::with_capacity(2); AREA_SIZE];
-    for i in 0..AREA_SIZE {
-        num_text[i] = if map[i] < 10 {
-            String::from("0") + &map[i].to_string()
+    //Modernized way of generating a formatted map
+    let mut num_text: Vec<StyledObject<String>> = map.iter().map(|hits| {
+        let s = style(if *hits < 10 {
+            String::from("0") + &hits.to_string()
         } else {
-            map[i].to_string()
+            hits.to_string()
+        }).bold();
+        if *hits == 0 {
+            s
+        } else {
+            s.red()
         }
-    }
-    
+    }).collect();
+
+    num_text[usr_i] = num_text[usr_i].clone().bold().on_blue();
+
     //print map
     for i in 0..SQUARE_SIZE {
         //print line
@@ -204,11 +210,11 @@ fn yeeteors(pos: usize, num: usize, rng: &mut ThreadRng, term: &mut Term) -> Res
         //print line with numbers
         print!("|");
         for j in 0..SQUARE_SIZE {
-            if [j, i] == usr_pos {
-                print!("{}|", style(num_text[SQUARE_SIZE*i + j].clone()).bold().on_blue());
-            } else {
+            //if [j, i] == usr_pos {
+            //    print!("{}|", num_text[SQUARE_SIZE*i + j].clone().bold().on_blue());
+            //} else {
                 print!("{}|", num_text[SQUARE_SIZE*i + j]);
-            }
+            //}
         }
         print!("\n");
     }

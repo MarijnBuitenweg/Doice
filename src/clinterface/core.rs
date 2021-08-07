@@ -49,6 +49,7 @@ impl UI {
     }
 
     pub fn run(&mut self) -> std::io::Result<usize> {
+        self.term.set_title("Doice.");
         while self.current_screen != isize::MAX {
             self.term.clear_screen()?;
             if self.current_screen >= 0 {
