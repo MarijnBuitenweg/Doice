@@ -1,9 +1,12 @@
+use crate::dice_rolls::Roller;
+
 //This file contains all the activities
 use super::core::Activity;
 
 mod dice_console;
 mod character_loader;
 mod starfury;
+mod rollers;
 
 pub const ACTIVITY_ARRAY: [Activity; 3] = [Activity {
     name: "Dice Console",
