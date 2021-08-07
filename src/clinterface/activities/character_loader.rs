@@ -10,6 +10,7 @@ use crate::clinterface::{
 //Data format for a character uses TOML headers (eg: [header]), uses ':' for value assignment, does need anything to delimit a string
 
 pub fn character_loader(_: isize, dat: &mut AppData, term: &mut Term) -> Result<isize, &'static str> {
+    println!("The character loader currently does not do anything. Using 'q' as the filename will bring you back to the menu.");
     let mut src = String::new();
     loop {
         //Obtain filename from user and handle errors
