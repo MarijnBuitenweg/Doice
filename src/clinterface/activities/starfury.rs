@@ -176,19 +176,18 @@ fn yeeteors(pos: usize, num: usize, rng: &mut ThreadRng, term: &mut Term) -> Res
     let usr_pos = [halfway - 1 + (pos & 1), halfway - 1 + ((pos & 2) >> 1)];//[halfway - (pos & 1), halfway - 1 + (pos & 2)];
     let usr_i = SQUARE_SIZE*usr_pos[1] + usr_pos[0];
 
+    //Calculates hits for every square in range
     let mut map = [0; AREA_SIZE];
     for _ in 0..num {
         let hit = rng.gen_range(0, AREA_SIZE);
         map[hit] += 1;
     }
 
-    //Modernized way of generating a formatted map
+    //Converts hits into styled text
     let mut num_text: Vec<StyledObject<String>> = map.iter().map(|hits| {
-        let s = style(if *hits < 10 {
-            String::from("0") + &hits.to_string()
-        } else {
-            hits.to_string()
-        }).bold();
+        let s = style(format!("{:02}", hits)).bold();
+        
+        //If hit, turn text red
         if *hits == 0 {
             s
         } else {
@@ -197,6 +196,7 @@ fn yeeteors(pos: usize, num: usize, rng: &mut ThreadRng, term: &mut Term) -> Res
     }).collect();
 
     num_text[usr_i] = num_text[usr_i].clone().bold().on_blue();
+    let mut listing: String = String::with_capacity(num * 10);
 
     //print map
     for i in 0..SQUARE_SIZE {
@@ -214,6 +214,18 @@ fn yeeteors(pos: usize, num: usize, rng: &mut ThreadRng, term: &mut Term) -> Res
             //    print!("{}|", num_text[SQUARE_SIZE*i + j].clone().bold().on_blue());
             //} else {
                 print!("{}|", num_text[SQUARE_SIZE*i + j]);
+                
+                //If there's a hit, write to listing
+                if map[SQUARE_SIZE*i + j] != 0 {
+                    listing.push_str(
+                        &format!(
+                            "{} hits at\t{}\t{}\n", 
+                            map[SQUARE_SIZE*i + j], 
+                            j as isize - usr_pos[0] as isize, 
+                            usr_pos[1] as isize - i as isize
+                        )
+                    );
+                }
             //}
         }
         print!("\n");
@@ -224,6 +236,9 @@ fn yeeteors(pos: usize, num: usize, rng: &mut ThreadRng, term: &mut Term) -> Res
         print!("---");
     }
     print!("\n");
+
+    println!("Listing with relative position for each hit (horizontal, vertical):");
+    println!("{}", listing);
 
     println!("Press Enter to continue...");
     loop {
