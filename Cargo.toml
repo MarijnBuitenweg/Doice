@@ -1,6 +1,6 @@
 [package]
 name = "Doice"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["Marijn Buitenweg"]
 edition = "2018"
 
