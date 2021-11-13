@@ -24,6 +24,7 @@ pub fn dice_console(_: isize, _: &mut AppData, _: &mut Term) -> Result<isize, &'
             break;
         }
 
+
         let mut rng = rand::thread_rng();
 
         let roller = match dice_rolls::Roller::from_text(buf.as_str()) {

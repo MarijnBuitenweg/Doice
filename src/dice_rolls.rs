@@ -117,6 +117,11 @@ impl Roller {
 }
 
 fn interpret_args(args: Vec<&str>) -> Result<Roller, &'static str> {
+    //If line is empty, tell user
+    if args.len() == 0 {
+        return Err(NODICEDEF);
+    }
+    
     let mut dice_def: Vec<&str> = args[0].split(
         |c| c == 'd' || c == 'D'
     ).collect();
