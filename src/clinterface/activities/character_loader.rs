@@ -1,6 +1,5 @@
-use crate::dnd_character::*;
 use console::Term;
-use dialoguer::{Input, Confirm};
+use dialoguer::{Input};
 use std::{fs};
 use crate::clinterface::{
     core::AppData,
@@ -9,9 +8,9 @@ use crate::clinterface::{
 
 //Data format for a character uses TOML headers (eg: [header]), uses ':' for value assignment, does need anything to delimit a string
 
-pub fn character_loader(_: isize, dat: &mut AppData, term: &mut Term) -> Result<isize, &'static str> {
+pub fn character_loader(_: isize, _dat: &mut AppData, term: &mut Term) -> Result<isize, &'static str> {
     println!("The character loader currently does not do anything. Using 'q' as the filename will bring you back to the menu.");
-    let mut src = String::new();
+    let mut _src = String::new();
     loop {
         //Obtain filename from user and handle errors
         let f_name = match Input::<String>::new()
@@ -27,7 +26,7 @@ pub fn character_loader(_: isize, dat: &mut AppData, term: &mut Term) -> Result<
             return Ok(0);
         }
         
-        src = match fs::read_to_string(f_name) {
+        _src = match fs::read_to_string(f_name) {
             Ok(s) => s,
             Err(_) => {
                 display_msg("File could not be found", term);

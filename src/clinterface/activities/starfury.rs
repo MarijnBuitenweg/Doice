@@ -1,5 +1,3 @@
-use std::io::Write;
-
 use console::{Key, StyledObject, Term, style};
 use dialoguer::Input;
 use rand::{Rng, prelude::ThreadRng};

@@ -1,6 +1,7 @@
 use console::Term;
 use dialoguer::{Confirm, Select};
 use rand::prelude::ThreadRng;
+use super::activities::rainworms::Rainworms;
 use super::menus::MENU_ARRAY;
 use super::activities::ACTIVITY_ARRAY;
 use crate::dnd_character::DndCharacter;
@@ -21,6 +22,7 @@ pub struct Activity  {
 
 pub struct AppData {
     pub character: Option<DndCharacter>,
+    pub rainwormsgame: Option<Rainworms>,
     pub rng: ThreadRng,
 }
 
@@ -30,7 +32,7 @@ pub struct UI {
     past_screen: isize,
     current_screen: isize,
     term: Term,
-    dat: AppData
+    dat: AppData,
 }
 
 impl UI {
@@ -43,6 +45,7 @@ impl UI {
             term: Term::stdout(),
             dat: AppData {
                 character: None,
+                rainwormsgame: None,
                 rng: rand::thread_rng(),
             },
         }
@@ -63,18 +66,20 @@ impl UI {
     }
 
     fn run_menu(&mut self) -> std::io::Result<usize> {
+        let menu = &self.menus[self.current_screen as usize];
+
         //obtain user input
-        println!("{}", self.menus[self.current_screen as usize].prompt);
+        println!("{}", menu.prompt);
         let selection = Select::new()
             //.with_prompt(self.menus[self.current_screen as usize].prompt)
-            .items(self.menus[self.current_screen as usize].items)
+            .items(menu.items)
             .default(0)
             .interact()?;
     
         //Update history
         self.past_screen = self.current_screen;
         //Update future
-        self.current_screen = self.menus[self.current_screen as usize].mapping[selection];
+        self.current_screen = menu.mapping[selection];
 
         Ok(0)
     }
