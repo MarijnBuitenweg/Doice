@@ -26,7 +26,7 @@ pub const MENU_ARRAY: [Menu; 5] = [
     },
     Menu {
         prompt: "Random stuff that has no-where else to go:",
-        items: &["Rainworms optimizer", "Back"],
-        mapping: &[-4 , 0],
+        items: &["Rainworms optimizer", "Dungeon randomizer", "Back"],
+        mapping: &[-4, -5, 0],
     },
 ];

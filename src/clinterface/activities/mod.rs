@@ -7,9 +7,10 @@ mod dice_console;
 mod character_loader;
 mod starfury;
 mod rollers;
+pub mod dungeon_gen;
 pub mod rainworms;
 
-pub const ACTIVITY_ARRAY: [Activity; 4] = [Activity {
+pub const ACTIVITY_ARRAY: [Activity; 5] = [Activity {
     name: "Dice Console",
     controller: dice_console::dice_console,
 },
@@ -24,5 +25,9 @@ Activity {
 Activity {
     name: "Rainworms Optimizer",
     controller: rainworms::rainworms_optimizer,
+},
+Activity {
+    name: "Dungeon generator",
+    controller: dungeon_gen::gen_dung,
 }
 ];

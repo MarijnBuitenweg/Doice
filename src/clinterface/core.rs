@@ -1,6 +1,7 @@
 use console::Term;
 use dialoguer::{Confirm, Select};
 use rand::prelude::ThreadRng;
+use super::activities::dungeon_gen::DungeonData;
 use super::activities::rainworms::Rainworms;
 use super::menus::MENU_ARRAY;
 use super::activities::ACTIVITY_ARRAY;
@@ -24,6 +25,7 @@ pub struct AppData {
     pub character: Option<DndCharacter>,
     pub rainwormsgame: Option<Rainworms>,
     pub rng: ThreadRng,
+    pub dungeon_dat: DungeonData,
 }
 
 pub struct UI {
@@ -47,6 +49,7 @@ impl UI {
                 character: None,
                 rainwormsgame: None,
                 rng: rand::thread_rng(),
+                dungeon_dat: DungeonData::new(),
             },
         }
     }
