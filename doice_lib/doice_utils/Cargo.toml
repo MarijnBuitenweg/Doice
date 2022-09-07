@@ -1,0 +1,14 @@
+[package]
+name = "doice_utils"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+wasm_comp = []
+
+[dependencies]
+itertools = "0.10.3"
+rayon = { version = "1.5.3", optional = true }
+strsim = "0.10.0"

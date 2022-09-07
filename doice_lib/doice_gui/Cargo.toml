@@ -1,0 +1,20 @@
+[package]
+name = "doice_gui"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+rayon = ["dnd_data/rayon", "doice_roller/rayon"]
+include_data = ["dnd_data/include_data"]
+wasm_comp = ["doice_roller/wasm_comp", "instant/wasm-bindgen", "dnd_data/wasm_comp", "doice_utils/wasm_comp"]
+
+[dependencies]
+dnd_data = { version = "0.1.0", path = "../dnd_data" }
+doice_roller = { version = "0.1.0", path = "../doice_roller"}
+doice_utils = { version = "0.1.0", path = "../doice_utils" }
+dyn-clone = "1.0.6"
+eframe = { version = "0.18.0", optional = true }
+instant = "0.1.12"
+itertools = "0.10.3"

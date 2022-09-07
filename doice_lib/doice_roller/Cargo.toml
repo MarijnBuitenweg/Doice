@@ -1,0 +1,19 @@
+[package]
+name = "doice_roller"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+wasm_comp = ["getrandom/js", "instant/wasm-bindgen", "doice_utils/wasm_comp"]
+
+[dependencies]
+doice_utils = { version = "0.1.0", path = "../doice_utils" }
+dyn-clone = "1.0.6"
+egui = "0.18.1"
+getrandom = "0.2.7"
+instant = "0.1.12"
+itertools = "0.10.3"
+rand = { version = "0.8.5", features = ["nightly", "simd_support"] }
+rayon = { version = "1.5.3", optional = true }

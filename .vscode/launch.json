@@ -7,15 +7,148 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'Doice'",
+            "name": "Debug unit tests in library 'dnd_data'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=dnd_data"
+                ],
+                "filter": {
+                    "name": "dnd_data",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'doice_utils'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=doice_utils"
+                ],
+                "filter": {
+                    "name": "doice_utils",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'doice_gui'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=doice_gui"
+                ],
+                "filter": {
+                    "name": "doice_gui",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'doice_roller'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=doice_roller"
+                ],
+                "filter": {
+                    "name": "doice_roller",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'doice_legacy'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=doice_legacy"
+                ],
+                "filter": {
+                    "name": "doice_legacy",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'doice_lib'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=doice_lib"
+                ],
+                "filter": {
+                    "name": "doice_lib",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'doice_wasm'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=doice_wasm"
+                ],
+                "filter": {
+                    "name": "doice_wasm",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'doice_smol'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=Doice",
-                    "--package=Doice"
+                    "--bin=doice_smol",
+                    "--package=doice_smol"
                 ],
                 "filter": {
-                    "name": "Doice",
+                    "name": "doice_smol",
                     "kind": "bin"
                 }
             },
@@ -25,16 +158,53 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'Doice'",
+            "name": "Debug unit tests in executable 'doice_smol'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=Doice",
-                    "--package=Doice"
+                    "--bin=doice_smol",
+                    "--package=doice_smol"
                 ],
                 "filter": {
-                    "name": "Doice",
+                    "name": "doice_smol",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'doice'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=doice",
+                    "--package=doice"
+                ],
+                "filter": {
+                    "name": "doice",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'doice'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=doice",
+                    "--package=doice"
+                ],
+                "filter": {
+                    "name": "doice",
                     "kind": "bin"
                 }
             },

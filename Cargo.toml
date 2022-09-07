@@ -1,13 +1,29 @@
 [package]
-name = "Doice"
+name = "doice"
 version = "0.2.3"
 authors = ["Marijn Buitenweg"]
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[unstable]
+sparse-registry = true
+
+[workspace]
+members = [
+    "doice_lib/dnd_data",
+    "doice_lib/doice_gui",
+    "doice_lib/doice_roller",
+    "doice_lib/doice_utils",
+    "doice_lib/doice_legacy",
+    "doice_lib",
+    "bin/doice_wasm",
+    "bin/doice_smol",
+]
+
 [dependencies]
-rand = "0.7.3"
-console = "0.14.1"
-dialoguer = "0.8.0"
-serde = "1.0.126"
+doice_lib = { version = "0.1.0", path = "doice_lib", features = ["rayon", "include_data", "eframe"] }
+
+[profile.release]
+strip = true
+lto = "fat"
