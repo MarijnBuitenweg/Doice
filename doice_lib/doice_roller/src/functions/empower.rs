@@ -7,7 +7,7 @@ use itertools::Itertools;
 
 use super::FunctionInit;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Empower {
     roll: DiceRoller,
     single_roll: DiceRoller,

@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{fmt::Debug, str::FromStr};
 
 use crate::{
     dice_roller::DiceRoller, functions::interpret_function, DiceError, Expression, Rollable,
@@ -41,7 +41,7 @@ impl FromStr for Expression {
     }
 }
 
-impl<T: Rollable + 'static + Send + Sync> From<T> for Expression {
+impl<T: Rollable + 'static + Send + Sync + Debug> From<T> for Expression {
     fn from(expr: T) -> Self {
         Box::new(expr)
     }

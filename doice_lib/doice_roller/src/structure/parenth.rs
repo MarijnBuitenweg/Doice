@@ -4,7 +4,7 @@ use crate::{prob_dist::ProbDist, DiceError, Expression, RollOut, Rollable};
 
 use super::lin_comb::LinComb;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Parenth {
     expr: Expression,
 }

@@ -1,4 +1,5 @@
-use std::{cmp::Ordering, collections::BTreeMap, str::FromStr};
+use itertools::Itertools;
+use std::{cmp::Ordering, collections::BTreeMap, fmt::Debug, str::FromStr};
 
 use super::{layouter::Layouter, prob_dist::ProbDist, RollOut, Rollable, Value};
 
@@ -10,7 +11,7 @@ use crate::dice_adapters::generate_dice_adapters;
 const MAX_DIE: usize = 1_000_000;
 const MAX_DICE_COUNT: usize = 1_000_000_000;
 
-pub trait DiceAdapter: DynClone + Send + Sync {
+pub trait DiceAdapter: DynClone + Send + Sync + Debug {
     /// Will be called on the entire output
     fn run(&self, input: Vec<Value>, out_txt: &mut Layouter, d_info: &DiceRoller) -> Vec<Value>;
     /// Will be called to find the probDist of a single die
@@ -31,7 +32,7 @@ impl Clone for DiceOption {
     }
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct DiceRoller {
     dice_type: usize,
     dice_count: usize,

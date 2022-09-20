@@ -5,7 +5,7 @@ use crate::{
 
 use super::DiceAdapterGen;
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct KeepHighest {
     count: usize,
 }

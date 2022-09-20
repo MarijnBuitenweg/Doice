@@ -1,7 +1,12 @@
 #![feature(map_first_last)]
-#![feature(iter_intersperse)]
 
-use std::{convert::Infallible, error::Error, fmt::Display, ops::Add, str::FromStr};
+use std::{
+    convert::Infallible,
+    error::Error,
+    fmt::{Debug, Display},
+    ops::Add,
+    str::FromStr,
+};
 
 use dyn_clone::DynClone;
 
@@ -23,7 +28,10 @@ mod dice_roller;
 pub use dice_roller::DiceRoller;
 pub mod legacy;
 
-type Expression = Box<dyn Rollable + Send + Sync>;
+pub trait FullyRollable: Rollable + Debug {}
+impl<T: Rollable + Debug> FullyRollable for T {}
+
+type Expression = Box<dyn FullyRollable + Send + Sync>;
 
 pub type Value = isize;
 
@@ -151,7 +159,7 @@ impl From<&str> for DiceError {
 
 impl Display for DiceError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.desc.fmt(f)
+        Display::fmt(self, f)
     }
 }
 

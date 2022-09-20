@@ -1,6 +1,6 @@
 use crate::{prob_dist::ProbDist, RollOut, Rollable};
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 pub struct Nothing {}
 
 impl Nothing {

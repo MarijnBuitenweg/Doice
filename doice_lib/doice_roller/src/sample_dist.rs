@@ -7,7 +7,7 @@ use rand::{thread_rng, Rng};
 
 use super::{Layouter, ProbDist, Rollable};
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct SampleDist {
     dist: BTreeMap<isize, usize>,
 }

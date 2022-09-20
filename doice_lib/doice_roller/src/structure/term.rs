@@ -6,20 +6,20 @@ use crate::{
 
 use super::{literal::Literal, nop::Nothing};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 enum Sign {
     Positive,
     Negative,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 enum Operator {
     Mul(Box<Term>),
     Div(Box<Term>),
     Nop(),
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Term {
     roll: Expression,
     op: Operator,

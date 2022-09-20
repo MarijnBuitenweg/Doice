@@ -2,7 +2,7 @@ use std::{collections::BTreeMap, str::FromStr};
 
 use crate::{layouter::Layouter, prob_dist::ProbDist, DiceError, RollOut, Rollable};
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 pub struct Literal {
     value: isize,
 }

@@ -8,7 +8,7 @@ use crate::{
 
 use super::FunctionInit;
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct StatRoller;
 
 impl FunctionInit for StatRoller {

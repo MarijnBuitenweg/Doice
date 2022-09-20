@@ -1,13 +1,16 @@
 use std::collections::BTreeMap;
 
-use crate::{{
-    dice_roller::{DiceAdapter, DiceRoller},
-    Value,
-}, ProbDist, Layouter};
+use crate::{
+    Layouter, ProbDist,
+    {
+        dice_roller::{DiceAdapter, DiceRoller},
+        Value,
+    },
+};
 
 use super::DiceAdapterGen;
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Default)]
 pub struct RerollEq {
     reroll_value: usize,
 }

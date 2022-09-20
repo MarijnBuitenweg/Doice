@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use std::str::FromStr;
 
 use crate::{prob_dist::ProbDist, DiceError, Expression, RollOut, Rollable};
@@ -58,7 +59,7 @@ fn fill_parentheses(terms: &mut [String], parenth: &[String]) {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct LinComb {
     terms: Vec<Term>,
 }
@@ -92,10 +93,11 @@ impl FromStr for LinComb {
         // Refill parentheses
         fill_parentheses(&mut terms, &parenth);
         // Convert text to terms
-        let terms = terms
+        let mut terms: Vec<_> = terms
             .iter()
             .map(|t| t.as_str().parse())
             .collect::<Result<_, _>>()?;
+        terms.reverse();
         Ok(LinComb { terms })
     }
 }
@@ -132,9 +134,11 @@ impl Rollable for LinComb {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use crate::structure::lin_comb::fill_parentheses;
 
-    use super::strip_parenth;
+    use super::{strip_parenth, LinComb};
 
     #[test]
     fn strip_parenth_test() {
@@ -152,5 +156,11 @@ mod tests {
             stripped[0],
             "aFunction(anexpression)+somenumber+fun()+sin(2*pi)"
         );
+    }
+
+    #[test]
+    fn split_term_test() {
+        let src = "-5 + 10 - 4+2";
+        dbg!(LinComb::from_str(src).unwrap());
     }
 }

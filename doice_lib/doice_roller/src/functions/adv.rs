@@ -2,7 +2,7 @@ use crate::{DiceError, Expression, ProbDist, RollOut, Rollable};
 
 use super::FunctionInit;
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct Adv {
     contents: Expression,
 }

@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::{DiceError, Expression, ProbDist, Rollable, SampleDist, RollOut};
+use crate::{DiceError, Expression, ProbDist, RollOut, Rollable, SampleDist};
 
 use super::FunctionInit;
 
@@ -8,7 +8,7 @@ const GIRTH: isize = 20;
 const LENGTH: f64 = 5.0;
 const SCALE: f64 = 1000.0;
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct UnitDick {
     dickst: SampleDist,
 }

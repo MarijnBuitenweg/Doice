@@ -4,7 +4,7 @@ use crate::{
 
 use super::FunctionInit;
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 pub struct Crit {
     roller: DiceRoller,
     avg_roll: f64,

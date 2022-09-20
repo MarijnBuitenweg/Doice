@@ -6,7 +6,7 @@ use super::{crit::Crit, FunctionInit};
 
 /// atk(dmgroll, bonus, to_hit, ac, (adv))
 /// Will probably be called from character manager to display avg dmg off attacks
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 pub struct Attack {
     rolls: Expression,
     dmg_bonus: u8,
