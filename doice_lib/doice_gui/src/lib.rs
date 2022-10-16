@@ -1,6 +1,6 @@
 // Unstable features
 #![feature(associated_type_bounds)]
-#![feature(is_some_with)]
+#![feature(is_some_and)]
 // Allows
 #![allow(dead_code)]
 
@@ -19,10 +19,10 @@ mod show_trait;
 pub use activity_host::ActivityHost;
 pub use application::Activity;
 pub use application::DCtx;
-pub use show_trait::DoiceShow;
 /// Main application
 #[cfg(feature = "eframe")]
 pub use application::DoiceApp;
+pub use dnd_data;
 #[cfg(feature = "eframe")]
 pub use eframe;
-pub use dnd_data;
+pub use show_trait::DoiceShow;

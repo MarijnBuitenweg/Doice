@@ -37,7 +37,7 @@ impl DCtx {
     }
 
     pub fn has_focus(&self) -> bool {
-        self.focus.is_some_and(|i| *i == self.crnt_i)
+        self.focus.is_some_and(|i| i == self.crnt_i)
     }
 
     pub fn request_focus(&mut self) -> bool {
@@ -50,7 +50,7 @@ impl DCtx {
     }
 
     pub fn surrender_focus(&mut self) {
-        if self.focus.is_some_and(|i| *i == self.crnt_i) {
+        if self.focus.is_some_and(|i| i == self.crnt_i) {
             self.focus = None;
             self.changed_focus = true;
         }
