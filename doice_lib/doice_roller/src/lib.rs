@@ -19,19 +19,17 @@ mod sample_dist;
 mod structure;
 pub use prob_dist::ProbDist;
 pub use sample_dist::SampleDist;
+use structure::expression::Expression;
 
 mod layouter;
 pub use layouter::Layouter;
 mod bruteforce;
-pub use bruteforce::BruteForceProbDist;
+use bruteforce::BruteForceProbDist;
 mod dice_roller;
-pub use dice_roller::DiceRoller;
+use dice_roller::DiceRoller;
+mod error;
+pub use error::DiceError;
 pub mod legacy;
-
-pub trait FullyRollable: Rollable + Debug {}
-impl<T: Rollable + Debug> FullyRollable for T {}
-
-type Expression = Box<dyn FullyRollable + Send + Sync>;
 
 pub type Value = isize;
 
@@ -52,7 +50,7 @@ impl Add<RollOut> for RollOut {
     }
 }
 
-pub trait Rollable: DynClone + Send {
+pub trait Rollable: DynClone + Send + Sync + Debug {
     fn roll(&self) -> RollOut;
     fn dist(&self) -> ProbDist;
 
@@ -61,22 +59,14 @@ pub trait Rollable: DynClone + Send {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Roll {
-    src_text: String,
     root: Expression,
 }
 
 impl Roll {
-    pub fn from_expr(expr: Expression, display_txt: String) -> Self {
-        Roll {
-            src_text: display_txt,
-            root: expr,
-        }
-    }
-
-    pub fn src(&self) -> &str {
-        &self.src_text
+    pub fn from_expr(expr: Expression) -> Self {
+        Roll { root: expr }
     }
 }
 
@@ -84,11 +74,10 @@ impl Add<isize> for Roll {
     type Output = Self;
 
     fn add(self, rhs: isize) -> Self::Output {
-        let (expr, src_text) = (self.root, self.src_text);
+        let expr = self.root;
         let mut new_root = LinComb::from(expr);
         new_root.add_term(rhs.into());
         Roll {
-            src_text,
             root: new_root.into(),
         }
     }
@@ -131,42 +120,5 @@ impl Default for Roll {
             src_text: String::new(),
             root: Nothing::new().into(),
         }
-    }
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct DiceError {
-    desc: String,
-}
-
-impl From<String> for DiceError {
-    fn from(str: String) -> Self {
-        DiceError { desc: str }
-    }
-}
-
-impl From<DiceError> for String {
-    fn from(err: DiceError) -> Self {
-        err.desc
-    }
-}
-
-impl From<&str> for DiceError {
-    fn from(input: &str) -> Self {
-        input.to_string().into()
-    }
-}
-
-impl Display for DiceError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        Display::fmt(self, f)
-    }
-}
-
-impl Error for DiceError {}
-
-impl From<Infallible> for DiceError {
-    fn from(_: Infallible) -> Self {
-        Default::default()
     }
 }

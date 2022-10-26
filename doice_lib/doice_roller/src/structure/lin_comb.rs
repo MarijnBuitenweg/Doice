@@ -68,6 +68,14 @@ impl LinComb {
     pub fn add_term(&mut self, term: Term) {
         self.terms.push(term);
     }
+
+    pub fn is_redundant(&mut self) -> Option<Term> {
+        if self.terms.len() == 1 {
+            self.terms.pop()
+        } else {
+            None
+        }
+    }
 }
 
 impl From<Expression> for LinComb {
@@ -160,7 +168,7 @@ mod tests {
 
     #[test]
     fn split_term_test() {
-        let src = "-5 + 10 - 4+2";
+        let src = "-5 + 10 - 4*2";
         dbg!(LinComb::from_str(src).unwrap());
     }
 }
