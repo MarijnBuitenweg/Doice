@@ -3,7 +3,7 @@ use std::str::FromStr;
 
 use crate::{prob_dist::ProbDist, DiceError, Expression, RollOut, Rollable};
 
-use super::term::Term;
+use super::term::{Sign, Term};
 
 /// Strips the input string of its whitespace, and rips out anything in parentheses
 fn strip_parenth(src: &str) -> (String, Vec<String>) {
@@ -164,7 +164,11 @@ impl Rollable for LinComb {
             // And add their texts together
             let res = term.roll();
             out.value += res.value;
-            out.txt = out.txt + term.sign().as_str() + res.txt;
+            if let Sign::Positive = term.sign() {
+                out.txt = out.txt + term.sign().as_str() + res.txt;
+            } else {
+                out.txt = out.txt + res.txt;
+            }
         }
         // Remove initial plus or minus
         if !out.txt.sections.is_empty() {
