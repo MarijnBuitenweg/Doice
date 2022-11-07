@@ -91,7 +91,7 @@ impl FromStr for LinComb {
 
     fn from_str(src: &str) -> Result<Self, Self::Err> {
         let mut parenth = false;
-        let mut term_fin = true;
+        let mut term_fin = false;
         let mut first = true;
         // Find the places where terms end
         let term_ends = src
@@ -113,8 +113,8 @@ impl FromStr for LinComb {
             .batching(|iter| {
                 let last = iter
                     .take_while(|(_, c)| {
-                        let take = first || (!['+', '-'].contains(c) && !term_fin);
-                        term_fin = ['/', '*'].contains(c);
+                        let take = first || !(['+', '-'].contains(c) && term_fin);
+                        term_fin = !['/', '*'].contains(c);
                         first = false;
                         dbg!(take)
                     })

@@ -36,6 +36,7 @@ impl FromStr for Literal {
     type Err = DiceError;
 
     fn from_str(src: &str) -> Result<Self, Self::Err> {
+        let src = src.trim();
         Ok(Literal {
             value: src.parse().or(Err("Bad Literal"))?,
         })

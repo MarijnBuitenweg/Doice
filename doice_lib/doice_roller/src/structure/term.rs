@@ -55,7 +55,7 @@ impl From<isize> for Term {
 impl FromStr for Term {
     type Err = DiceError;
 
-    fn from_str(mut src: &str) -> Result<Self, Self::Err> {
+    fn from_str(src: &str) -> Result<Self, Self::Err> {
         // If src is empty, return an empty term
         if src.is_empty() {
             return Ok(Term {
@@ -64,6 +64,9 @@ impl FromStr for Term {
                 sign: Sign::Positive,
             });
         }
+
+        // Trim the term for simplicity and safety
+        let mut src = src.trim();
 
         let first_char = src.as_bytes()[0].into();
         let sign = match first_char {
@@ -91,7 +94,7 @@ impl FromStr for Term {
         };
 
         Ok(Term {
-            roll: roll_txt.parse()?,
+            roll: dbg!(roll_txt).parse()?,
             op,
             sign,
         })
