@@ -4,9 +4,7 @@ use crate::{dice_roller::DiceRoller, functions::interpret_function, DiceError, R
 
 use super::{literal::Literal, nop::Nothing, parenth::Parenth};
 
-//pub type Expression = Box<dyn Rollable + Send + Sync>;
-#[derive(Debug)]
-pub struct Expression(Box<dyn Rollable + Send + Sync>);
+pub type Expression = Box<dyn Rollable + Send + Sync>;
 
 impl FromStr for Expression {
     type Err = DiceError;
@@ -44,29 +42,19 @@ impl FromStr for Expression {
 }
 
 impl<T: Rollable + 'static + Send + Sync + Debug> From<T> for Expression {
-    fn from(expr: T) -> Self {
-        Self(Box::new(expr))
-    }
-}
-
-impl Rollable for Expression {
-    fn roll(&self) -> crate::RollOut {
-        self.0.roll()
-    }
-
-    fn dist(&self) -> crate::ProbDist {
-        self.0.dist()
+    fn from(value: T) -> Self {
+        Box::new(value)
     }
 }
 
 impl Clone for Expression {
     fn clone(&self) -> Self {
-        Self(dyn_clone::clone_box(self.0.as_ref()))
+        dyn_clone::clone_box(self.as_ref())
     }
 }
 
 impl Default for Expression {
     fn default() -> Self {
-        Nothing::default().into()
+        Box::new(Nothing::new())
     }
 }

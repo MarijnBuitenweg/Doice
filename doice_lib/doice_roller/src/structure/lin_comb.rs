@@ -90,22 +90,68 @@ impl FromStr for LinComb {
     type Err = DiceError;
 
     fn from_str(src: &str) -> Result<Self, Self::Err> {
-        let (mut stripped, parenth) = strip_parenth(src);
+        let mut parenth = false;
+        let mut term_fin = true;
+        let mut first = true;
+        // Find the places where terms end
+        let term_ends = src
+            .char_indices()
+            // Filter out parenthesised stuff
+            .filter(|(_, c)| {
+                if *c == '(' {
+                    parenth = true;
+                }
+                let par_out = parenth;
+                if *c == ')' {
+                    parenth = false;
+                }
+                !par_out
+            })
+            // Filter out whitespace
+            .filter(|(_, c)| !c.is_whitespace())
+            // Determine the positions of the ends of all the terms
+            .batching(|iter| {
+                let last = iter
+                    .take_while(|(_, c)| {
+                        let take = first || (!['+', '-'].contains(c) && !term_fin);
+                        term_fin = ['/', '*'].contains(c);
+                        first = false;
+                        dbg!(take)
+                    })
+                    .last();
+                first = true;
+                dbg!(last)
+            })
+            .map(|(i, _)| i as isize);
 
-        // Reverse string to make it so that the signs are included when splitting
-        stripped = stripped.chars().rev().collect();
-        // Split terms
-        let terms = stripped.split_inclusive(&['+', '-'][..]);
-        // Rereverse the terms
-        let mut terms: Vec<String> = terms.map(|s| s.chars().rev().collect()).collect();
-        // Refill parentheses
-        fill_parentheses(&mut terms, &parenth);
-        // Convert text to terms
-        let mut terms: Vec<_> = terms
+        let terms: Vec<_> = [-1]
             .iter()
-            .map(|t| t.as_str().parse())
+            .copied()
+            .chain(term_ends)
+            .tuple_windows()
+            // start is exclusive, end inclusive
+            .map(|(start, end)| {
+                let s = &src[((start + 1) as usize)..=(end as usize)];
+                dbg!(s);
+                s.parse()
+            })
             .collect::<Result<_, _>>()?;
-        terms.reverse();
+
+        // let (mut stripped, parenth) = strip_parenth(src);
+        // // Reverse string to make it so that the signs are included when splitting
+        // stripped = stripped.chars().rev().collect();
+        // // Split terms
+        // let terms = stripped.split_inclusive(&['+', '-'][..]);
+        // // Rereverse the terms
+        // let mut terms: Vec<String> = terms.map(|s| s.chars().rev().collect()).collect();
+        // // Refill parentheses
+        // fill_parentheses(&mut terms, &parenth);
+        // // Convert text to terms
+        // let mut terms: Vec<_> = terms
+        //     .iter()
+        //     .map(|t| t.as_str().parse())
+        //     .collect::<Result<_, _>>()?;
+        // terms.reverse();
         Ok(LinComb { terms })
     }
 }

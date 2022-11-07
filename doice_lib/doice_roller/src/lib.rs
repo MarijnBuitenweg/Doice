@@ -59,6 +59,7 @@ pub trait Rollable: DynClone + Send + Sync + Debug {
     }
 }
 
+/// Wrapper around Expression that exposes the public API
 #[derive(Clone, Debug)]
 pub struct Roll {
     root: Expression,
@@ -88,7 +89,6 @@ impl FromStr for Roll {
 
     fn from_str(src: &str) -> Result<Self, Self::Err> {
         Ok(Roll {
-            src_text: String::from(src),
             root: LinComb::from_str(src)?.into(),
         })
     }
@@ -117,7 +117,6 @@ impl Rollable for Roll {
 impl Default for Roll {
     fn default() -> Self {
         Roll {
-            src_text: String::new(),
             root: Nothing::new().into(),
         }
     }
