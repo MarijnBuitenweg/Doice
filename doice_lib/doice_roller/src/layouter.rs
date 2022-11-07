@@ -1,8 +1,8 @@
 use std::ops::Add;
 
 use {
-    egui::TextFormat,
     egui::epaint::{text::LayoutJob, Color32, Stroke},
+    egui::TextFormat,
 };
 
 pub const LINE: Stroke = Stroke {
@@ -82,6 +82,15 @@ impl Add for Layouter {
 
     fn add(mut self, mut rhs: Self) -> Self::Output {
         self.sections.append(&mut rhs.sections);
+        self
+    }
+}
+
+impl Add<&str> for Layouter {
+    type Output = Self;
+
+    fn add(mut self, rhs: &str) -> Self::Output {
+        self.append(rhs);
         self
     }
 }

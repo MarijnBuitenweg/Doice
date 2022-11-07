@@ -1,11 +1,13 @@
 use std::collections::HashMap;
 
-use dnd_data::{character::Character, character::{Stats, Skills, ProfLvl}};
-use doice_roller::{DiceRoller, Roll};
-use eframe::egui::{Ui, collapsing_header::CollapsingState, Id, Grid, Layout};
-use itertools::Itertools;
 use crate::{show_trait::DoiceShow, DCtx};
-
+use dnd_data::{
+    character::Character,
+    character::{ProfLvl, Skills, Stats},
+};
+use doice_roller::{DiceRoller, Roll};
+use eframe::egui::{collapsing_header::CollapsingState, Grid, Id, Layout, Ui};
+use itertools::Itertools;
 
 impl DoiceShow for Character<'_> {
     fn show(&mut self, ui: &mut eframe::egui::Ui, ctx: &DCtx) {
@@ -18,33 +20,33 @@ impl DoiceShow for Character<'_> {
 
 fn show_resources(character: &mut Character, ui: &mut Ui, _ctx: &DCtx) {
     CollapsingState::load_with_default_open(ui.ctx(), Id::new("Resources collapsible"), false)
-            .show_header(ui, |ui| {
-                ui.label("Resources\t\tRest:");
-                if ui.button("Long").clicked() {
-                    character.long_rest();
-                }
+        .show_header(ui, |ui| {
+            ui.label("Resources\t\tRest:");
+            if ui.button("Long").clicked() {
+                character.long_rest();
+            }
 
-                if ui.button("Short").clicked() {
-                    character.short_rest();
-                }
-            })
-            .body(|ui| {
-                let categories = character.state.iter().group_by(|elem| elem.category());
+            if ui.button("Short").clicked() {
+                character.short_rest();
+            }
+        })
+        .body(|ui| {
+            let categories = character.state.iter().group_by(|elem| elem.category());
 
-                for (cat_opt, items) in &categories {
-                    if let Some(cat) = cat_opt {
-                        ui.collapsing(cat, |ui| {
-                            for sv in items {
-                                ui.label(sv.to_string());
-                            }
-                        });
-                    } else {
+            for (cat_opt, items) in &categories {
+                if let Some(cat) = cat_opt {
+                    ui.collapsing(cat, |ui| {
                         for sv in items {
                             ui.label(sv.to_string());
                         }
+                    });
+                } else {
+                    for sv in items {
+                        ui.label(sv.to_string());
                     }
                 }
-            });
+            }
+        });
 }
 
 fn show_stats(character: &mut Character, ui: &mut Ui, ctx: &DCtx) {
@@ -82,48 +84,54 @@ impl DoiceShow for Stats {
 
 fn show_skills(character: &mut Character, ui: &mut Ui, ctx: &DCtx) {
     ui.collapsing("Skills", |ui| {
-                show_skills_helper(&mut character.skills, ui, &character.stats, character.prof_bonus, ctx);
-            });
+        show_skills_helper(
+            &mut character.skills,
+            ui,
+            &character.stats,
+            character.prof_bonus,
+            ctx,
+        );
+    });
 }
 
 pub fn show_skills_helper(skills: &mut Skills, ui: &mut Ui, stats: &Stats, prof: u8, ctx: &DCtx) {
-        Grid::new("skills")
-            .num_columns(3)
-            .spacing([40.0, 4.0])
-            .striped(true)
-            .show(ui, |ui| {
-                let bonuses: HashMap<_, _> = stats
-                    .iter()
-                    .map(|(name, stat)| {
-                        let stat = if *stat > 25 { *stat / 10 } else { *stat };
+    Grid::new("skills")
+        .num_columns(3)
+        .spacing([40.0, 4.0])
+        .striped(true)
+        .show(ui, |ui| {
+            let bonuses: HashMap<_, _> = stats
+                .iter()
+                .map(|(name, stat)| {
+                    let stat = if *stat > 25 { *stat / 10 } else { *stat };
 
-                        let bonus = (stat as isize - 10) / 2;
-                        (name, bonus)
-                    })
-                    .collect();
+                    let bonus = (stat as isize - 10) / 2;
+                    (name, bonus)
+                })
+                .collect();
 
-                for (name, skill) in skills.iter_mut() {
-                    ui.label(&format!("{}:", name));
-                    let bonus = bonuses[&skill.stat_name] + (prof * skill.prof as u8) as isize;
-                    let mut centre_txt = if bonus < 0 {
-                        bonus.to_string()
-                    } else {
-                        format!("+{}", bonus)
-                    };
+            for (name, skill) in skills.iter_mut() {
+                ui.label(&format!("{}:", name));
+                let bonus = bonuses[&skill.stat_name] + (prof * skill.prof as u8) as isize;
+                let mut centre_txt = if bonus < 0 {
+                    bonus.to_string()
+                } else {
+                    format!("+{}", bonus)
+                };
 
-                    if skill.prof != ProfLvl::Nothing {
-                        centre_txt += " (";
-                        centre_txt += &skill.prof.to_string();
-                        centre_txt += ")";
-                    }
-
-                    ui.label(&centre_txt);
-
-                    roll_buttons(ui, bonus, name, ctx);
-                    ui.end_row();
+                if skill.prof != ProfLvl::Nothing {
+                    centre_txt += " (";
+                    centre_txt += &skill.prof.to_string();
+                    centre_txt += ")";
                 }
-            });
-    }
+
+                ui.label(&centre_txt);
+
+                roll_buttons(ui, bonus, name, ctx);
+                ui.end_row();
+            }
+        });
+}
 
 fn roll_buttons(ui: &mut Ui, bonus: isize, name: &String, ctx: &DCtx) {
     ui.with_layout(Layout::right_to_left(), |ui| {
@@ -148,9 +156,7 @@ fn roll_buttons(ui: &mut Ui, bonus: isize, name: &String, ctx: &DCtx) {
             } else if adv == -1 {
                 txt += " with disadv";
             }
-            roller.display_roll(
-                Roll::from_expr(DiceRoller::new(20, 1, adv, None).into(), txt) + bonus,
-            );
+            roller.display_roll(Roll::from_expr(DiceRoller::new(20, 1, adv, None).into()) + bonus);
             roller.roll();
         }
     });

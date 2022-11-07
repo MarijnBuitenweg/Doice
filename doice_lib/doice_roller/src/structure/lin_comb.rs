@@ -160,11 +160,11 @@ impl Rollable for LinComb {
     fn roll(&self) -> RollOut {
         let mut out = RollOut::default();
         // Roll all terms
-        for term in self.terms.iter().rev() {
+        for term in self.terms.iter() {
             // And add their texts together
             let res = term.roll();
             out.value += res.value;
-            out.txt = out.txt + res.txt;
+            out.txt = out.txt + term.sign().as_str() + res.txt;
         }
         // Remove initial plus or minus
         if !out.txt.sections.is_empty() {

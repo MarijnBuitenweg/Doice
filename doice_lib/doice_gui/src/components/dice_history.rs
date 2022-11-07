@@ -1,9 +1,7 @@
-use instant::{Instant, Duration};
+use instant::{Duration, Instant};
 
-use {
-    eframe::egui::{Layout, ScrollArea, TextStyle, Ui},
-};
 use eframe::egui::epaint::{text::LayoutJob, Color32};
+use eframe::egui::{Layout, ScrollArea, TextStyle, Ui};
 
 use doice_roller::{Roll, RollOut};
 
@@ -39,15 +37,22 @@ impl DiceHistory {
             let luck: f64 = if self.entries.is_empty() {
                 0.0f64
             } else {
-                let weight = 1.0f64/(self.entries.len() as f64);
-                self.entries.iter().map(|entry| entry.luck()*weight).filter(|w_luck| w_luck.is_normal()).sum()
+                let weight = 1.0f64 / (self.entries.len() as f64);
+                self.entries
+                    .iter()
+                    .map(|entry| entry.luck() * weight)
+                    .filter(|w_luck| w_luck.is_normal())
+                    .sum()
             };
 
-            ui.colored_label(match luck.total_cmp(&0.0f64) {
-                std::cmp::Ordering::Less => Color32::RED,
-                std::cmp::Ordering::Equal => Color32::GRAY,
-                std::cmp::Ordering::Greater => Color32::GREEN,
-            }, format!("Session Luck: {:.3}", luck));
+            ui.colored_label(
+                match luck.total_cmp(&0.0f64) {
+                    std::cmp::Ordering::Less => Color32::RED,
+                    std::cmp::Ordering::Equal => Color32::GRAY,
+                    std::cmp::Ordering::Greater => Color32::GREEN,
+                },
+                format!("Session Luck: {:.3}", luck),
+            );
         });
     }
 }
@@ -55,6 +60,7 @@ impl DiceHistory {
 #[derive(Clone)]
 pub struct DiceHistoryEntry {
     roll: Roll,
+    roll_txt: String,
     result: RollOut,
     avg: f64,
     variance: f64,
@@ -62,9 +68,10 @@ pub struct DiceHistoryEntry {
 }
 
 impl DiceHistoryEntry {
-    pub fn new(roll: Roll, result: RollOut, avg: f64, variance: f64) -> Self {
+    pub fn new(roll: Roll, roll_txt: String, result: RollOut, avg: f64, variance: f64) -> Self {
         Self {
             roll,
+            roll_txt,
             result,
             avg,
             variance,
@@ -74,7 +81,7 @@ impl DiceHistoryEntry {
 
     pub fn show(&mut self, ui: &mut Ui) {
         ui.horizontal_wrapped(|ui| {
-            ui.label(self.roll.src());
+            ui.label(&self.roll_txt);
             ui.label(" -> ");
             ui.label(LayoutJob::from(self.result.txt.clone()));
 
@@ -85,7 +92,7 @@ impl DiceHistoryEntry {
     }
 
     pub fn src(&self) -> &str {
-        self.roll.src()
+        &self.roll_txt
     }
 
     pub fn result(&self) -> &RollOut {

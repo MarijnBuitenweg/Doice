@@ -7,9 +7,24 @@ use crate::{
 use super::{literal::Literal, nop::Nothing};
 
 #[derive(Clone, Debug)]
-enum Sign {
+pub enum Sign {
     Positive,
     Negative,
+}
+
+impl Sign {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Sign::Positive => " + ",
+            Sign::Negative => " - ",
+        }
+    }
+}
+
+impl From<Sign> for &str {
+    fn from(value: Sign) -> Self {
+        value.as_str()
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -24,6 +39,12 @@ pub struct Term {
     roll: Expression,
     op: Operator,
     sign: Sign,
+}
+
+impl Term {
+    pub fn sign(&self) -> &Sign {
+        &self.sign
+    }
 }
 
 impl From<Expression> for Term {
@@ -108,13 +129,13 @@ impl Rollable for Term {
         let mut out = match &self.op {
             Operator::Mul(expr) => {
                 let mut res = expr.roll();
-                res.txt.append("*");
+                res.txt.append_front("*");
                 res.value *= rhs.value;
                 res
             }
             Operator::Div(expr) => {
                 let mut res = expr.roll();
-                res.txt.append("/");
+                res.txt.append_front("/");
                 res.value = (res.value as f64 / rhs.value as f64).floor() as Value;
                 res
             }
@@ -125,18 +146,19 @@ impl Rollable for Term {
         };
 
         // Add the text for the rhs
-        out.txt = out.txt + rhs.txt;
+        out.txt = rhs.txt + out.txt;
 
         // Apply the sign
-        match self.sign {
-            Sign::Positive => RollOut {
-                value: out.value,
-                txt: Layouter::from(" + ") + out.txt,
-            },
-            Sign::Negative => RollOut {
+        if let Sign::Negative = self.sign {
+            RollOut {
                 value: -out.value,
                 txt: Layouter::from(" - ") + out.txt,
-            },
+            }
+        } else {
+            RollOut {
+                value: out.value,
+                txt: out.txt,
+            }
         }
     }
 

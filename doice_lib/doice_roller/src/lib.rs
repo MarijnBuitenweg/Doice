@@ -1,12 +1,6 @@
 #![feature(map_first_last)]
 
-use std::{
-    convert::Infallible,
-    error::Error,
-    fmt::{Debug, Display},
-    ops::Add,
-    str::FromStr,
-};
+use std::{fmt::Debug, ops::Add, str::FromStr};
 
 use dyn_clone::DynClone;
 
@@ -26,7 +20,7 @@ pub use layouter::Layouter;
 mod bruteforce;
 use bruteforce::BruteForceProbDist;
 mod dice_roller;
-use dice_roller::DiceRoller;
+pub use dice_roller::DiceRoller;
 mod error;
 pub use error::DiceError;
 pub mod legacy;

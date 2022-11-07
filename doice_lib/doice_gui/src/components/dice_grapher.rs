@@ -1,17 +1,13 @@
-use std::{
-    collections::BTreeMap,
-    fmt::Write,
-    time::{Duration},
-};
+use std::{collections::BTreeMap, fmt::Write, time::Duration};
 
 use instant::Instant;
 
 use eframe::{
+    egui::epaint::{text::LayoutJob, Color32},
     egui::{
         plot::{Bar, BarChart, Plot, VLine},
-        Context, Key, Modifiers, RichText, Ui, Layout, DragValue,
+        Context, DragValue, Key, Layout, Modifiers, RichText, Ui,
     },
-    egui::epaint::{text::LayoutJob, Color32},
 };
 
 use {
@@ -37,6 +33,7 @@ impl Default for CurrentPanel {
 pub struct DiceGrapher<const EXP_UPDATE: u64 = 100> {
     bars: Vec<Bar>,
     roll: Roll,
+    roll_txt: String,
     dist_gen: ParExecutor<ProbDist>,
     ctx: Context,
     loading: bool,
@@ -170,6 +167,7 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
 
         self.history.add_entry(DiceHistoryEntry::new(
             self.roll.clone(),
+            self.roll_txt.clone(),
             res.clone(),
             self.avg,
             self.variance,
@@ -297,21 +295,19 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
     }
 
     fn refresh_dc(&mut self) {
-        
-            // Find the last entry that is < dc
-            let e = self.cumulative.iter().filter(|e| *e.0 < self.dc_val).last();
-            match e {
-                // If there are entries that give a chance of failing
-                Some(entry) => {
-                    // Calculate the chance of success from the chance to fail
-                    self.success_chance = (1.0 - entry.1) * 100.0;
-                }
-                None => {
-                    // Otherwise, there can be no failure
-                    self.success_chance = 100.0;
-                }
+        // Find the last entry that is < dc
+        let e = self.cumulative.iter().filter(|e| *e.0 < self.dc_val).last();
+        match e {
+            // If there are entries that give a chance of failing
+            Some(entry) => {
+                // Calculate the chance of success from the chance to fail
+                self.success_chance = (1.0 - entry.1) * 100.0;
             }
-        
+            None => {
+                // Otherwise, there can be no failure
+                self.success_chance = 100.0;
+            }
+        }
     }
 
     fn handle_experiment(&mut self) {
@@ -373,6 +369,7 @@ impl Clone for DiceGrapher {
         Self {
             bars: self.bars.clone(),
             roll: self.roll.clone(),
+            roll_txt: self.roll_txt.clone(),
             dist_gen: ParExecutor::with_notifyer(move || extra_ctx.request_repaint()),
             ctx: self.ctx.clone(),
             loading: self.loading,
