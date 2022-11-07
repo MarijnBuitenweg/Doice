@@ -83,8 +83,8 @@ impl FromStr for Term {
 
         let op = if let Some(c) = src.chars().find(|c| "/*".contains(*c)) {
             let mut mul_terms = src.splitn(2, c);
-            let mul_txt = mul_terms.next().unwrap();
             roll_txt = mul_terms.next().unwrap();
+            let mul_txt = mul_terms.next().unwrap();
             match c {
                 '*' => Operator::Mul(Box::new(mul_txt.parse()?)),
                 _ => Operator::Div(Box::new(mul_txt.parse()?)),

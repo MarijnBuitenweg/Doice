@@ -214,7 +214,7 @@ mod tests {
 
     #[test]
     fn split_term_test() {
-        let src = "-5 + 10 - 4*2";
+        let src = "-5 + 10*2*2 + 4*-2";
         dbg!(LinComb::from_str(src).unwrap());
     }
 }
