@@ -15,6 +15,9 @@ pub struct Empower {
 }
 
 impl FunctionInit for Empower {
+    const DOC: &'static str =
+        "Rolls damage roll as if the roll was empowered (5e sorcerer metamagic).\nUsage: emp(dmg roll, prof bonus)";
+
     fn generate(input: &str) -> Result<Expression, DiceError> {
         // Extract arguments
         let (roll, prof) = input

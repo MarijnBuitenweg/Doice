@@ -62,6 +62,8 @@ impl Rollable for Attack {
 }
 
 impl FunctionInit for Attack {
+    const DOC: &'static str = "Performs attack and damage rolls for an attack against a target with a given AC.\nUsage: atk(dmg roll, dmg bonus, to hit bonus, ac, (adv))";
+
     fn generate(input: &str) -> Result<Expression, crate::DiceError> {
         let (dmg_roll, input) = input.split_once(',').ok_or("no dmg roll provided")?;
         let (dmg_bonus, input) = input.split_once(',').ok_or("no dmg bonus provided")?;

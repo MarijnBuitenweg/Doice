@@ -8,6 +8,7 @@ use self::structure::{lin_comb::LinComb, nop::Nothing};
 
 mod dice_adapters;
 mod functions;
+pub use functions::FUNCTION_DOCS;
 mod prob_dist;
 mod sample_dist;
 mod structure;

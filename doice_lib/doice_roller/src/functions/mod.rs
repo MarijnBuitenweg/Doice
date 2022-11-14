@@ -11,6 +11,8 @@ mod sum;
 mod unit_dick;
 
 pub trait FunctionInit: Rollable {
+    const DOC: &'static str;
+
     fn generate(input: &str) -> Result<Expression, DiceError>;
 }
 
@@ -25,7 +27,18 @@ const FUNCTION_GENERATORS: &[(&str, FunctionGenerator)] = &[
     ("atk", attack::Attack::generate),
 ];
 
+pub const FUNCTION_DOCS: &[(&str, &str)] = &[
+    ("Empower", empower::Empower::DOC),
+    ("Stat roll", stat_roll::StatRoller::DOC),
+    ("The shaft", unit_dick::UnitDick::DOC),
+    ("Advantage", adv::Adv::DOC),
+    ("Sum", sum::Sum::DOC),
+    ("Critical attack damage", Crit::DOC),
+    ("Attack", attack::Attack::DOC),
+];
+
 pub fn interpret_function(src: &str) -> Result<Expression, DiceError> {
+    let src = src.trim();
     let (ident, input) = src
         .split_once('(')
         .ok_or_else(|| "function string lacks '('".to_string())?;

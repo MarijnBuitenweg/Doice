@@ -12,6 +12,9 @@ use super::FunctionInit;
 pub struct StatRoller;
 
 impl FunctionInit for StatRoller {
+    const DOC: &'static str =
+        "Performs a stat roll with the 4d6 drop lowest method.\nUsage: stat()";
+
     fn generate(_: &str) -> Result<Expression, DiceError> {
         Ok(Box::new(Self))
     }

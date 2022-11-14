@@ -8,6 +8,8 @@ pub struct Adv {
 }
 
 impl FunctionInit for Adv {
+    const DOC: &'static str = "Rolls the provided expression with advantage, taking the highest of two samples.\nUsage: adv(expr)";
+
     fn generate(input: &str) -> Result<Expression, DiceError> {
         let contents = input.parse()?;
         Ok(Adv { contents }.into())

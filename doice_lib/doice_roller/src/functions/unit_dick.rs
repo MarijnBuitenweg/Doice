@@ -14,6 +14,9 @@ pub struct UnitDick {
 }
 
 impl FunctionInit for UnitDick {
+    const DOC: &'static str =
+        "Function with a phallic probability distribution.\nUsage: dick(length, girth)";
+
     fn generate(input: &str) -> Result<Expression, DiceError> {
         if let Some((length, girth)) = input.split(',').collect_tuple() {
             let length = length

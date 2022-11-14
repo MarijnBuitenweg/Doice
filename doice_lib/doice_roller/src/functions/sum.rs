@@ -15,6 +15,9 @@ pub struct Sum {
 }
 
 impl FunctionInit for Sum {
+    const DOC: &'static str =
+        "Rolls the provided expression n times and takes the sum.\nUsage: sum(expr, n)";
+
     fn generate(input: &str) -> Result<Expression, DiceError> {
         let (expr, n) = input
             .split(',')

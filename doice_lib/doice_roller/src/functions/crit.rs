@@ -11,6 +11,8 @@ pub struct Crit {
 }
 
 impl FunctionInit for Crit {
+    const DOC: &'static str = "Rolls the provided dmg dice like a critted attack roll, choosing to eiter double the initial roll or roll twice the amount of dice.\nUsage: crit(roll)";
+
     fn generate(input: &str) -> Result<Expression, DiceError> {
         let roll: DiceRoller = input.parse()?;
         let avg_roll = roll.dist().expectation();

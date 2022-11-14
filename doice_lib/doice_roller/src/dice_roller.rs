@@ -141,6 +141,7 @@ impl FromStr for DiceRoller {
     type Err = String;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
+        let value = value.trim();
         // Determine the length of the number used to set the number of dice
         let count_len = value.chars().take_while(|c| c.is_numeric()).count();
         // Try to parse the number of dice, on fail use 1

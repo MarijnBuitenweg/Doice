@@ -221,4 +221,10 @@ mod tests {
         let src = "-5 + 10*2*2 + 4*-2";
         dbg!(LinComb::from_str(src).unwrap());
     }
+
+    #[test]
+    fn double_dice_test() {
+        let src = "d4 + 4 + d";
+        dbg!(LinComb::from_str(src).unwrap());
+    }
 }
