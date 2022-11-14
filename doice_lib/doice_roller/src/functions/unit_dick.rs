@@ -20,9 +20,13 @@ impl FunctionInit for UnitDick {
     fn generate(input: &str) -> Result<Expression, DiceError> {
         if let Some((length, girth)) = input.split(',').collect_tuple() {
             let length = length
+                .trim()
                 .parse()
                 .map_err(|_| "could not parse length in dick")?;
-            let girth = girth.parse().map_err(|_| "could not parse girth in dick")?;
+            let girth = girth
+                .trim()
+                .parse()
+                .map_err(|_| "could not parse girth in dick")?;
             let mut dist = SampleDist::default();
             generate_ball(&mut dist, -2 * girth + 1, girth);
             generate_phallus(&mut dist, girth, length);

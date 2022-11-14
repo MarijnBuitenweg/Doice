@@ -24,7 +24,7 @@ impl FunctionInit for Empower {
             .split_once(',')
             .ok_or("improper arguments given to empower")?;
 
-        let roll: DiceRoller = roll.parse()?;
+        let roll: DiceRoller = roll.trim().parse()?;
         let mut single_roll = roll.clone();
         single_roll.set_dice_count(1);
 
@@ -33,6 +33,7 @@ impl FunctionInit for Empower {
             roll,
             single_roll,
             prof: prof
+                .trim()
                 .parse()
                 .map_err(|_| "proficiency bonus could not be parsed in empower")?,
         }))

@@ -74,10 +74,13 @@ impl FunctionInit for Attack {
         let crit_vec = vec![Crit::generate(dmg_roll).unwrap()];
         Ok(Attack {
             rolls: DiceRoller::from_str(dmg_roll).unwrap().into(),
-            dmg_bonus: dmg_bonus.parse().or(Err("invalid dmg bonus"))?,
+            dmg_bonus: dmg_bonus.trim().parse().or(Err("invalid dmg bonus"))?,
             d20: if adv { "d|" } else { "d" }.parse().unwrap(),
-            ac: ac.parse().or(Err("invalid ac"))?,
-            to_hit_bonus: to_hit_bonus.parse().or(Err("invalid to hit bonus"))?,
+            ac: ac.trim().parse().or(Err("invalid ac"))?,
+            to_hit_bonus: to_hit_bonus
+                .trim()
+                .parse()
+                .or(Err("invalid to hit bonus"))?,
             critters: crit_vec.into_boxed_slice(),
         }
         .into())

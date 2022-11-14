@@ -26,7 +26,8 @@ impl FunctionInit for Sum {
 
         Ok(Sum {
             expr: LinComb::from_str(expr)?.into(),
-            n: n.parse()
+            n: n.trim()
+                .parse()
                 .map_err(|_| "number of times to sum could not be parsed")?,
         }
         .into())
