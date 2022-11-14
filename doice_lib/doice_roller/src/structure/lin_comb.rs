@@ -98,12 +98,12 @@ impl FromStr for LinComb {
             .char_indices()
             // Filter out parenthesised stuff
             .filter(|(_, c)| {
-                if *c == '(' {
-                    parenth = true;
-                }
-                let par_out = parenth;
                 if *c == ')' {
                     parenth = false;
+                }
+                let par_out = parenth;
+                if *c == '(' {
+                    parenth = true;
                 }
                 !par_out
             })
@@ -225,6 +225,12 @@ mod tests {
     #[test]
     fn double_dice_test() {
         let src = "d4 + 4 + d";
+        dbg!(LinComb::from_str(src).unwrap());
+    }
+
+    #[test]
+    fn function_test() {
+        let src = "stat()";
         dbg!(LinComb::from_str(src).unwrap());
     }
 }
