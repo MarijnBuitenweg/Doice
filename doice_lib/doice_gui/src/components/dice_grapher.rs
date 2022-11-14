@@ -15,12 +15,34 @@ use {
     doice_utils::ParExecutor,
 };
 
-use super::dice_history::{DiceHistory, DiceHistoryEntry};
+use super::{
+    dice_docs::dice_docs,
+    dice_history::{DiceHistory, DiceHistoryEntry},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum CurrentPanel {
     Plot,
     History,
+    Help,
+}
+
+impl CurrentPanel {
+    pub fn cycle_left(&mut self) {
+        *self = match *self {
+            CurrentPanel::Plot => CurrentPanel::Plot,
+            CurrentPanel::History => CurrentPanel::Plot,
+            CurrentPanel::Help => CurrentPanel::History,
+        }
+    }
+
+    pub fn cycle_right(&mut self) {
+        *self = match *self {
+            CurrentPanel::Plot => CurrentPanel::History,
+            CurrentPanel::History => CurrentPanel::Help,
+            CurrentPanel::Help => CurrentPanel::Help,
+        }
+    }
 }
 
 impl Default for CurrentPanel {
@@ -330,16 +352,17 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
         self.handle_experiment();
 
         if ui.input_mut().consume_key(Modifiers::NONE, Key::PageUp) {
-            self.current_panel = CurrentPanel::Plot;
+            self.current_panel.cycle_left();
         }
 
         if ui.input_mut().consume_key(Modifiers::NONE, Key::PageDown) {
-            self.current_panel = CurrentPanel::History;
+            self.current_panel.cycle_right();
         }
 
         ui.horizontal(|ui| {
             ui.selectable_value(&mut self.current_panel, CurrentPanel::Plot, "Plot");
             ui.selectable_value(&mut self.current_panel, CurrentPanel::History, "History");
+            ui.selectable_value(&mut self.current_panel, CurrentPanel::Help, "Help");
 
             ui.with_layout(Layout::right_to_left(), |ui| {
                 let prev_checked = self.dc_on;
@@ -357,6 +380,7 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
         match self.current_panel {
             CurrentPanel::Plot => self.show_chart(ui),
             CurrentPanel::History => self.history.show(ui),
+            CurrentPanel::Help => dice_docs(ui),
         }
     }
 }
