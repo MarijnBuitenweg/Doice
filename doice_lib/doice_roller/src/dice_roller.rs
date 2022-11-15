@@ -7,7 +7,8 @@ use dyn_clone::DynClone;
 use rand::{distributions::Uniform, prelude::*};
 
 const MAX_DIE: usize = 1_000_000;
-const MAX_DICE_COUNT: usize = 1_000_000_000;
+const MAX_DICE_COUNT: usize = usize::MAX;
+const MAX_TEXT_DICE: usize = 1000;
 
 #[derive(Clone, Default, Debug)]
 pub struct DiceRoller {
@@ -179,10 +180,10 @@ impl Rollable for DiceRoller {
     fn roll(&self) -> super::RollOut {
         let mut rng = thread_rng();
         let dist = Uniform::<isize>::new(1, self.dice_type as isize + 1);
-        let mut rolls = Vec::with_capacity(self.dice_count);
+        let mut roll_total = 0;
         let mut buf = vec![0; 1 + self.advantage.unsigned_abs()];
         let mut out_txt = Layouter::default();
-        let do_txt = self.dice_count < MAX_DICE_COUNT / 2_usize.pow(10);
+        let do_txt = self.dice_count < MAX_TEXT_DICE;
 
         if self.dice_count > 1 {
             out_txt.append("[");
@@ -195,7 +196,7 @@ impl Rollable for DiceRoller {
                 *num = rng.sample(dist);
             }
             let mut used_i = 0;
-            rolls.push(match self.advantage.cmp(&0) {
+            roll_total += match self.advantage.cmp(&0) {
                 Ordering::Equal => buf[0],
                 Ordering::Greater => {
                     let roll;
@@ -215,7 +216,7 @@ impl Rollable for DiceRoller {
                         .expect("Empty Buffer?");
                     *roll
                 }
-            });
+            };
 
             // Add the text for this one diceroll
             if do_txt {
@@ -249,7 +250,7 @@ impl Rollable for DiceRoller {
         }
 
         RollOut {
-            value: rolls.iter().sum(),
+            value: roll_total,
             txt: out_txt,
         }
     }
