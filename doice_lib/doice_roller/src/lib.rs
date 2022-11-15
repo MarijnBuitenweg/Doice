@@ -26,6 +26,9 @@ mod error;
 pub use error::DiceError;
 pub mod legacy;
 
+#[cfg(test)]
+mod test;
+
 pub type Value = isize;
 
 #[derive(Default, Clone)]

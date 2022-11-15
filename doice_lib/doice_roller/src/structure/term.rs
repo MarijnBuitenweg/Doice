@@ -87,7 +87,7 @@ impl FromStr for Term {
         }
 
         // Trim the term for simplicity and safety
-        let mut src = src.trim();
+        let mut src = dbg!(src.trim());
 
         let first_char = src.as_bytes()[0].into();
         let sign = match first_char {
@@ -102,10 +102,25 @@ impl FromStr for Term {
 
         let mut roll_txt = src;
 
-        let op = if let Some(c) = src.chars().find(|c| "/*".contains(*c)) {
-            let mut mul_terms = src.splitn(2, c);
-            roll_txt = mul_terms.next().unwrap();
-            let mul_txt = mul_terms.next().unwrap();
+        let mut parenth = false;
+        let op = if let Some((i, c)) = src
+            .char_indices()
+            // Parenth filter
+            .filter(|(_, c)| {
+                if *c == ')' {
+                    parenth = false;
+                }
+                let par_out = parenth;
+                if *c == '(' {
+                    parenth = true;
+                }
+                !par_out
+            })
+            .find(|(_, c)| "/*".contains(*c))
+        {
+            let mut mul_txt: &str;
+            (roll_txt, mul_txt) = src.split_at(i);
+            mul_txt = mul_txt.trim_start_matches(c);
             match c {
                 '*' => Operator::Mul(Box::new(mul_txt.parse()?)),
                 _ => Operator::Div(Box::new(mul_txt.parse()?)),
@@ -115,7 +130,7 @@ impl FromStr for Term {
         };
 
         Ok(Term {
-            roll: dbg!(roll_txt).parse()?,
+            roll: roll_txt.parse()?,
             op,
             sign,
         })
