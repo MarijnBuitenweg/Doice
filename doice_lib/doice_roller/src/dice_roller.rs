@@ -6,54 +6,24 @@ use super::{layouter::Layouter, prob_dist::ProbDist, RollOut, Rollable, Value};
 use dyn_clone::DynClone;
 use rand::{distributions::Uniform, prelude::*};
 
-use crate::dice_adapters::generate_dice_adapters;
-
 const MAX_DIE: usize = 1_000_000;
 const MAX_DICE_COUNT: usize = 1_000_000_000;
-
-pub trait DiceAdapter: DynClone + Send + Sync + Debug {
-    /// Will be called on the entire output
-    fn run(&self, input: Vec<Value>, out_txt: &mut Layouter, d_info: &DiceRoller) -> Vec<Value>;
-    /// Will be called to find the probDist of a single die
-    fn dist(&self, input: ProbDist) -> ProbDist;
-}
-
-pub type DiceOption = Box<dyn DiceAdapter>;
-
-impl<T: DiceAdapter + 'static> From<T> for DiceOption {
-    fn from(opt: T) -> Self {
-        Box::new(opt)
-    }
-}
-
-impl Clone for DiceOption {
-    fn clone(&self) -> Self {
-        dyn_clone::clone_box(self.as_ref())
-    }
-}
 
 #[derive(Clone, Default, Debug)]
 pub struct DiceRoller {
     dice_type: usize,
     dice_count: usize,
     advantage: isize,
-    option: Option<DiceOption>,
 }
 
 impl DiceRoller {
     /// This makes it efficient to generate an arbitrary diceroll.
     /// The normal maximum values for a diceroll are not enforced here!
-    pub fn new(
-        dice_type: usize,
-        dice_count: usize,
-        advantage: isize,
-        option: Option<DiceOption>,
-    ) -> Self {
+    pub fn new(dice_type: usize, dice_count: usize, advantage: isize) -> Self {
         Self {
             dice_type,
             dice_count,
             advantage,
-            option,
         }
     }
 
@@ -199,10 +169,7 @@ impl FromStr for DiceRoller {
             dice_type,
             dice_count,
             advantage,
-            option: Default::default(),
         };
-
-        roller.option = generate_dice_adapters(&value[pre_adapter_len..], &roller);
 
         Ok(roller)
     }
@@ -281,11 +248,6 @@ impl Rollable for DiceRoller {
             out_txt.append("]");
         }
 
-        // Execute the diceoption
-        if let Some(opt) = &self.option {
-            rolls = opt.run(rolls, &mut out_txt, self);
-        }
-
         RollOut {
             value: rolls.iter().sum(),
             txt: out_txt,
@@ -301,10 +263,6 @@ impl Rollable for DiceRoller {
         let mut dist = ProbDist::try_from(dist).expect("Bad single die probability distribution!");
         // Extend it for advantage
         dist.apply_advantage(self.advantage);
-        // Then apply option
-        if let Some(opt) = &self.option {
-            dist = opt.dist(dist);
-        }
 
         // Then extend it for multiple
         dist = dist * self.dice_count;
@@ -352,11 +310,6 @@ impl Rollable for DiceRoller {
                 }
             }
         });
-
-        // Execute the diceoption
-        // if let Some(opt) = &self.option {
-        //     rolls = opt.run(rolls, &mut out_txt, self);
-        // }
 
         rolls.sum()
     }

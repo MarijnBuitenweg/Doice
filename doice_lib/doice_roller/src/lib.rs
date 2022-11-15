@@ -6,7 +6,6 @@ use dyn_clone::DynClone;
 
 use self::structure::{lin_comb::LinComb, nop::Nothing};
 
-mod dice_adapters;
 mod functions;
 pub use functions::FUNCTION_DOCS;
 mod prob_dist;
