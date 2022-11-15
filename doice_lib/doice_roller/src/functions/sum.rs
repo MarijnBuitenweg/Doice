@@ -3,7 +3,8 @@ use std::str::FromStr;
 use itertools::Itertools;
 
 use crate::{
-    structure::lin_comb::LinComb, DiceError, Expression, Layouter, ProbDist, RollOut, Rollable,
+    structure::lin_comb::LinComb, utils::split_once_parenth, DiceError, Expression, Layouter,
+    ProbDist, RollOut, Rollable,
 };
 
 use super::FunctionInit;
@@ -19,10 +20,7 @@ impl FunctionInit for Sum {
         "Rolls the provided expression n times and takes the sum.\nUsage: sum(expr, n)";
 
     fn generate(input: &str) -> Result<Expression, DiceError> {
-        let (expr, n) = input
-            .split(',')
-            .collect_tuple()
-            .ok_or("invalid args passed to sum")?;
+        let (expr, n) = split_once_parenth(input, ',').ok_or("invalid args passed to sum")?;
 
         Ok(Sum {
             expr: LinComb::from_str(expr)?.into(),

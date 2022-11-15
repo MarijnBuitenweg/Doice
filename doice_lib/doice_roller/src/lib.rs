@@ -25,6 +25,7 @@ pub use dice_roller::DiceRoller;
 mod error;
 pub use error::DiceError;
 pub mod legacy;
+mod utils;
 
 #[cfg(test)]
 mod test;
