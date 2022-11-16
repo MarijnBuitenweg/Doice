@@ -29,13 +29,13 @@ impl Rollable for Crit {
         let mut txt_out = Layouter::new();
         txt_out.append("[");
         let init_roll = self.roller.roll();
-        txt_out = txt_out + init_roll.txt;
+        txt_out += init_roll.txt;
         let val_out = if init_roll.value > self.avg_roll as isize {
             txt_out.append("*2]");
             init_roll.value * 2
         } else {
             let second_roll = self.roller.roll();
-            txt_out = txt_out + second_roll.txt;
+            txt_out += second_roll.txt;
             init_roll.value + second_roll.value
         };
         txt_out.append("]");

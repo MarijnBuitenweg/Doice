@@ -37,7 +37,7 @@ impl Rollable for StatRoller {
         let mut out_txt = Layouter::default();
         out_txt.append("[");
         for roll in roll_outs {
-            out_txt = out_txt + roll.txt;
+            out_txt += roll.txt;
             out_txt.append(" ");
         }
         out_txt.pop();

@@ -1,9 +1,9 @@
 use itertools::Itertools;
 use std::{cmp::Ordering, collections::BTreeMap, fmt::Debug, str::FromStr};
 
-use super::{layouter::Layouter, prob_dist::ProbDist, RollOut, Rollable, Value};
+use super::{layouter::Layouter, prob_dist::ProbDist, RollOut, Rollable};
 
-use dyn_clone::DynClone;
+
 use rand::{distributions::Uniform, prelude::*};
 
 const MAX_DIE: usize = 1_000_000;
@@ -152,7 +152,7 @@ impl FromStr for DiceRoller {
             .parse()
             .unwrap_or(20);
 
-        let pre_adapter_len = pre_type_len + type_len;
+        let _pre_adapter_len = pre_type_len + type_len;
 
         if dice_type > MAX_DIE {
             return Err("Die size too large!".to_string());
@@ -166,7 +166,7 @@ impl FromStr for DiceRoller {
         //     return Err("Too many dice!".to_string());
         // }
 
-        let mut roller = DiceRoller {
+        let roller = DiceRoller {
             dice_type,
             dice_count,
             advantage,

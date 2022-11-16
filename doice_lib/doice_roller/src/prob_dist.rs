@@ -415,7 +415,7 @@ impl TryFrom<BTreeMap<isize, f64>> for ProbDist {
 
     fn try_from(data: BTreeMap<isize, f64>) -> Result<Self, Self::Error> {
         // Compute the total
-        let total: f64 = data.iter().map(|(_, v)| *v).sum();
+        let total: f64 = data.values().copied().sum();
         // If it's close enough to 1, declare it a valid ProbDist
         if (total - 1.0).abs() <= 0.01 {
             Ok(ProbDist(data))
