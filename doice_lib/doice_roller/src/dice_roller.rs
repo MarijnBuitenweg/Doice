@@ -162,9 +162,9 @@ impl FromStr for DiceRoller {
             return Err("0-dice are not supported!".to_string());
         }
 
-        if dice_count > MAX_DICE_COUNT {
-            return Err("Too many dice!".to_string());
-        }
+        // if dice_count > MAX_DICE_COUNT {
+        //     return Err("Too many dice!".to_string());
+        // }
 
         let mut roller = DiceRoller {
             dice_type,

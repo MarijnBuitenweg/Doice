@@ -102,19 +102,20 @@ impl FromStr for Term {
 
         let mut roll_txt = src;
 
-        let mut parenth = false;
+        let mut parenth = 0;
         let op = if let Some((i, c)) = src
             .char_indices()
             // Parenth filter
             .filter(|(_, c)| {
                 if *c == ')' {
-                    parenth = false;
+                    parenth -= 1;
+                    parenth = parenth.max(0);
                 }
                 let par_out = parenth;
                 if *c == '(' {
-                    parenth = true;
+                    parenth += 1;
                 }
-                !par_out
+                par_out == 0
             })
             .find(|(_, c)| "/*".contains(*c))
         {

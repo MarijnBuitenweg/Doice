@@ -123,14 +123,14 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
             .current_dist
             .keys()
             .max()
-            .unwrap()
-            .abs_diff(*self.current_dist.keys().min().unwrap()) as f32;
+            .unwrap_or(&1)
+            .abs_diff(*self.current_dist.keys().min().unwrap_or(&-1)) as f32;
         let height = self
             .current_dist
             .values()
             .copied()
             .reduce(f64::max)
-            .unwrap()
+            .unwrap_or(1.0f64)
             .clamp(0.0f64, f64::MAX);
 
         self.peak = height;

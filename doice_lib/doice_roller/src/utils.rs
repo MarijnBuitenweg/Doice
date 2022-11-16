@@ -1,15 +1,16 @@
 pub fn find_parenth(src: &str, needle: char) -> Option<usize> {
-    let mut parenth = false;
+    let mut parenth = 0;
     src.char_indices()
         .filter(|(_, c)| {
             if *c == ')' {
-                parenth = false;
+                parenth -= 1;
+                parenth = parenth.max(0);
             }
             let par_out = parenth;
             if *c == '(' {
-                parenth = true;
+                parenth += 1;
             }
-            !par_out
+            par_out == 0
         })
         .find(|(_, c)| *c == needle)
         .map(|(i, _)| i)

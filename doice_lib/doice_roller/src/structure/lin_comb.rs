@@ -90,7 +90,7 @@ impl FromStr for LinComb {
     type Err = DiceError;
 
     fn from_str(src: &str) -> Result<Self, Self::Err> {
-        let mut parenth = false;
+        let mut parenth = 0;
         let mut term_fin = false;
         let mut first = true;
         // Find the places where terms end
@@ -99,13 +99,14 @@ impl FromStr for LinComb {
             // Filter out parenthesised stuff
             .filter(|(_, c)| {
                 if *c == ')' {
-                    parenth = false;
+                    parenth -= 1;
+                    parenth = parenth.max(0);
                 }
                 let par_out = parenth;
                 if *c == '(' {
-                    parenth = true;
+                    parenth += 1;
                 }
-                !par_out
+                par_out == 0
             })
             // Filter out whitespace
             .filter(|(_, c)| !c.is_whitespace())
