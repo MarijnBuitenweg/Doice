@@ -168,7 +168,7 @@ impl Rollable for LinComb {
             if let Sign::Positive = term.sign() {
                 out.txt = out.txt + term.sign().as_str() + res.txt;
             } else {
-                out.txt = out.txt + res.txt;
+                out.txt += res.txt;
             }
         }
         // Remove initial plus or minus

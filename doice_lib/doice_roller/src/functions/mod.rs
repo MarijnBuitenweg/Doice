@@ -6,6 +6,7 @@ mod adv;
 mod attack;
 mod crit;
 mod empower;
+mod mirror;
 mod stat_roll;
 mod sum;
 mod unit_dick;
@@ -25,6 +26,7 @@ const FUNCTION_GENERATORS: &[(&str, FunctionGenerator)] = &[
     ("sum", sum::Sum::generate),
     ("crit", Crit::generate),
     ("atk", attack::Attack::generate),
+    ("mirror", mirror::Mirror::generate),
 ];
 
 pub const FUNCTION_DOCS: &[(&str, &str)] = &[
@@ -35,6 +37,7 @@ pub const FUNCTION_DOCS: &[(&str, &str)] = &[
     ("Sum", sum::Sum::DOC),
     ("Critical attack damage", Crit::DOC),
     ("Attack", attack::Attack::DOC),
+    ("Mirror", mirror::Mirror::DOC),
 ];
 
 pub fn interpret_function(src: &str) -> Result<Expression, DiceError> {

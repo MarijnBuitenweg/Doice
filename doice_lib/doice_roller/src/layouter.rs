@@ -1,4 +1,4 @@
-use std::ops::Add;
+use std::ops::{Add, AddAssign};
 
 use {
     egui::epaint::{text::LayoutJob, Color32, Stroke},
@@ -83,6 +83,12 @@ impl Add for Layouter {
     fn add(mut self, mut rhs: Self) -> Self::Output {
         self.sections.append(&mut rhs.sections);
         self
+    }
+}
+
+impl AddAssign for Layouter {
+    fn add_assign(&mut self, mut rhs: Self) {
+        self.sections.append(&mut rhs.sections);
     }
 }
 

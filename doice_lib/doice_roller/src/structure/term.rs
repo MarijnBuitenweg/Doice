@@ -181,10 +181,17 @@ impl Rollable for Term {
     fn roll_quiet(&self) -> isize {
         let rhs = self.roll.roll_quiet();
 
-        match &self.op {
+        // Calculate absolute result
+        let abs_result = match &self.op {
             Operator::Mul(expr) => rhs * expr.roll_quiet(),
             Operator::Div(expr) => (expr.roll_quiet() as f64 / rhs as f64).floor() as Value,
             Operator::Nop() => rhs,
+        };
+
+        // Apply sign
+        match self.sign {
+            Sign::Positive => abs_result,
+            Sign::Negative => -abs_result,
         }
     }
 
