@@ -21,6 +21,7 @@ pub struct Layouter {
 }
 
 impl Layouter {
+    #[must_use]
     pub fn new() -> Self {
         Default::default()
     }
@@ -112,7 +113,7 @@ impl From<&str> for Layouter {
 impl From<Layouter> for LayoutJob {
     fn from(val: Layouter) -> Self {
         let mut out = LayoutJob::default();
-        for (txt, fmt) in val.sections.into_iter() {
+        for (txt, fmt) in val.sections {
             out.append(&txt, 0.0, fmt);
         }
         out

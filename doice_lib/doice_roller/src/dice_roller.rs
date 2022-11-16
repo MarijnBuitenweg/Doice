@@ -3,7 +3,6 @@ use std::{cmp::Ordering, collections::BTreeMap, fmt::Debug, str::FromStr};
 
 use super::{layouter::Layouter, prob_dist::ProbDist, RollOut, Rollable};
 
-
 use rand::{distributions::Uniform, prelude::*};
 
 const MAX_DIE: usize = 1_000_000;
@@ -20,6 +19,7 @@ pub struct DiceRoller {
 impl DiceRoller {
     /// This makes it efficient to generate an arbitrary diceroll.
     /// The normal maximum values for a diceroll are not enforced here!
+    #[must_use]
     pub fn new(dice_type: usize, dice_count: usize, advantage: isize) -> Self {
         Self {
             dice_type,
@@ -29,11 +29,13 @@ impl DiceRoller {
     }
 
     /// Calculates the average of itself, not taking into account any modifiers like advantage or adapters
+    #[must_use]
     pub fn unmod_avg(&self) -> f64 {
         (self.dice_count * self.dice_type) as f64 / 2.0 + 0.5
     }
 
     /// Rolls 1 die, without producing text
+    #[must_use]
     pub fn roll_quiet(&self) -> isize {
         let mut rng = thread_rng();
         let dist = Uniform::<isize>::new(1, self.dice_type as isize + 1);
@@ -53,6 +55,7 @@ impl DiceRoller {
     }
 
     /// Rolls n dice, without producing text
+    #[must_use]
     pub fn roll_n_quiet(&self, n: usize) -> Vec<isize> {
         let mut rng = thread_rng();
         let dist = Uniform::<isize>::new(1, self.dice_type as isize + 1);
@@ -91,14 +94,17 @@ impl DiceRoller {
         rolls
     }
 
+    #[must_use]
     pub fn dice_type(&self) -> usize {
         self.dice_type
     }
 
+    #[must_use]
     pub fn dice_count(&self) -> usize {
         self.dice_count
     }
 
+    #[must_use]
     pub fn advantage(&self) -> isize {
         self.advantage
     }
@@ -152,8 +158,6 @@ impl FromStr for DiceRoller {
             .parse()
             .unwrap_or(20);
 
-        let _pre_adapter_len = pre_type_len + type_len;
-
         if dice_type > MAX_DIE {
             return Err("Die size too large!".to_string());
         }
@@ -192,7 +196,7 @@ impl Rollable for DiceRoller {
         // Perform the dice rolls, with (dis)advantage
         for count in 0..self.dice_count {
             // Refill the buffer with rolls
-            for num in buf.iter_mut() {
+            for num in &mut buf {
                 *num = rng.sample(dist);
             }
             let mut used_i = 0;
@@ -223,7 +227,7 @@ impl Rollable for DiceRoller {
                 out_txt.append("[");
                 for (i, elem) in buf
                     .iter()
-                    .map(|n| n.to_string())
+                    .map(ToString::to_string)
                     .enumerate()
                     .intersperse((usize::MAX, " ".to_string()))
                 {
@@ -258,7 +262,7 @@ impl Rollable for DiceRoller {
     fn dist(&self) -> super::prob_dist::ProbDist {
         // Build distribution for single die
         let density: f64 = 1.0f64 / (self.dice_type as f64);
-        let dist: BTreeMap<_, _> = (1..(self.dice_type + 1))
+        let dist: BTreeMap<_, _> = (1..=self.dice_type)
             .map(|res| (res as isize, density))
             .collect();
         let mut dist = ProbDist::try_from(dist).expect("Bad single die probability distribution!");
@@ -285,30 +289,13 @@ impl Rollable for DiceRoller {
         // Perform the dice rolls, with (dis)advantage
         let rolls = (0..self.dice_count).map(|_| {
             // Refill the buffer with rolls
-            for num in buf.iter_mut() {
+            for num in &mut buf {
                 *num = rng.sample(dist);
             }
-            let mut _used_i = 0;
             match self.advantage.cmp(&0) {
                 Ordering::Equal => buf[0],
-                Ordering::Greater => {
-                    let roll;
-                    (_used_i, roll) = buf
-                        .iter()
-                        .enumerate()
-                        .max_by_key(|v| v.1)
-                        .expect("Empty Buffer?");
-                    *roll
-                }
-                Ordering::Less => {
-                    let roll;
-                    (_used_i, roll) = buf
-                        .iter()
-                        .enumerate()
-                        .min_by_key(|v| v.1)
-                        .expect("Empty Buffer?");
-                    *roll
-                }
+                Ordering::Greater => *buf.iter().max().expect("Empty Buffer?"),
+                Ordering::Less => *buf.iter().min().expect("Empty Buffer?"),
             }
         });
 

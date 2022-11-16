@@ -54,7 +54,7 @@ fn fill_parentheses(terms: &mut [String], parenth: &[String]) {
         *term = term
             .split_inclusive('(')
             .intersperse_with(|| par_text.next().unwrap())
-            .flat_map(|s| s.chars())
+            .flat_map(str::chars)
             .collect();
     }
 }
@@ -67,14 +67,6 @@ pub struct LinComb {
 impl LinComb {
     pub fn add_term(&mut self, term: Term) {
         self.terms.push(term);
-    }
-
-    pub fn is_redundant(&mut self) -> Option<Term> {
-        if self.terms.len() == 1 {
-            self.terms.pop()
-        } else {
-            None
-        }
     }
 }
 
@@ -161,7 +153,7 @@ impl Rollable for LinComb {
     fn roll(&self) -> RollOut {
         let mut out = RollOut::default();
         // Roll all terms
-        for term in self.terms.iter() {
+        for term in &self.terms {
             // And add their texts together
             let res = term.roll();
             out.value += res.value;
@@ -180,7 +172,7 @@ impl Rollable for LinComb {
 
     fn dist(&self) -> ProbDist {
         let mut out = ProbDist::default();
-        for term in self.terms.iter() {
+        for term in &self.terms {
             out = out + &term.dist();
         }
         out

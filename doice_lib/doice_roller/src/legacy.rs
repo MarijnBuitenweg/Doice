@@ -21,13 +21,14 @@ pub struct Roller {
 }
 
 impl Roller {
+    #[must_use]
     pub fn new(cnt: u32, dtype: u32, dmod: i32, tmod: i32, adv: bool, disadv: bool) -> Roller {
         Roller {
             count: cnt,
             dtype,
             dmod,
             tmod,
-            _flags: (adv as u8) + 2 * (disadv as u8),
+            _flags: u8::from(adv) + 2 * u8::from(disadv),
         }
     }
 
@@ -40,7 +41,7 @@ impl Roller {
         let mut total = 0;
 
         for _ in 0..self.count {
-            let roll = gen.gen_range(1..(self.dtype + 1));
+            let roll = gen.gen_range(1..=self.dtype);
             let sum = (roll as i32) + self.dmod;
             out.push(sum);
             total += sum;
@@ -59,7 +60,7 @@ impl Roller {
         let t_sign = if self.tmod > 0 { " + " } else { " - " };
 
         if self.count == 1 {
-            let roll = rng.gen_range(1..(self.dtype + 1)) as i32;
+            let roll = rng.gen_range(1..=self.dtype) as i32;
             out += roll.to_string().as_str();
             if self.dmod != 0 || self.tmod != 0 {
                 if self.dmod != 0 {
@@ -77,20 +78,20 @@ impl Roller {
             return (out, roll + self.dmod + self.tmod);
         }
 
-        if self.dmod != 0 {
+        if self.dmod == 0 {
             for _i in 0..self.count {
-                let roll = rng.gen_range(1..(self.dtype + 1)) as i32;
+                let roll = rng.gen_range(1..=self.dtype) as i32;
+                out += &roll.to_string();
+                out.push('\n');
+                total += roll;
+            }
+        } else {
+            for _i in 0..self.count {
+                let roll = rng.gen_range(1..=self.dtype) as i32;
                 let sum = roll + self.dmod;
                 out += &(roll.to_string() + d_sign + &dmod_str + " = " + &sum.to_string());
                 out.push('\n');
                 total += sum;
-            }
-        } else {
-            for _i in 0..self.count {
-                let roll = rng.gen_range(1..(self.dtype + 1)) as i32;
-                out += &roll.to_string();
-                out.push('\n');
-                total += roll;
             }
         }
 
@@ -98,16 +99,15 @@ impl Roller {
         out += "________+\n";
 
         //Add tmod if needed
-        if self.tmod != 0 {
+        if self.tmod == 0 {
+            out += &total.to_string();
+        } else {
             out += &(total.to_string()
                 + t_sign
                 + self.tmod.abs().to_string().as_str()
                 + " = "
                 + (total + self.tmod).to_string().as_str());
-        } else {
-            out += &total.to_string();
         }
-        //out.push('\n');
 
         (out, total + self.tmod)
     }
@@ -138,19 +138,16 @@ fn interpret_args(args: Vec<&str>) -> Result<Roller, &'static str> {
     let dice_cnt = dice_def[0].parse::<u32>().unwrap_or(1);
 
     let dice_t_def;
-    let dice_mod = match dice_def[1].find(&['+', '-'][..]) {
-        Some(val) => {
-            let mod_def = dice_def[1].split_at(val);
-            dice_t_def = mod_def.0;
-            match mod_def.1.parse::<i32>() {
-                Ok(val) => val,
-                Err(_) => return Err(INCORRECT_DICEMOD),
-            }
+    let dice_mod = if let Some(val) = dice_def[1].find(&['+', '-'][..]) {
+        let mod_def = dice_def[1].split_at(val);
+        dice_t_def = mod_def.0;
+        match mod_def.1.parse::<i32>() {
+            Ok(val) => val,
+            Err(_) => return Err(INCORRECT_DICEMOD),
         }
-        None => {
-            dice_t_def = dice_def[1];
-            0
-        }
+    } else {
+        dice_t_def = dice_def[1];
+        0
     };
 
     let dice_type = match dice_t_def.parse::<u32>() {

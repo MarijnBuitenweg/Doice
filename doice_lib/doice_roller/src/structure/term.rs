@@ -144,16 +144,16 @@ impl Rollable for Term {
 
         let mut out = match &self.op {
             Operator::Mul(expr) => {
-                let mut res = expr.roll();
-                res.txt.append_front("*");
-                res.value *= rhs.value;
-                res
+                let mut result = expr.roll();
+                result.txt.append_front("*");
+                result.value *= rhs.value;
+                result
             }
             Operator::Div(expr) => {
-                let mut res = expr.roll();
-                res.txt.append_front("/");
-                res.value = (res.value as f64 / rhs.value as f64).floor() as Value;
-                res
+                let mut result = expr.roll();
+                result.txt.append_front("/");
+                result.value = (result.value as f64 / rhs.value as f64).floor() as Value;
+                result
             }
             Operator::Nop() => RollOut {
                 value: rhs.value,

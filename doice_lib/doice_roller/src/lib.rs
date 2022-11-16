@@ -61,6 +61,7 @@ pub struct Roll {
 }
 
 impl Roll {
+    #[must_use]
     pub fn from_expr(expr: Expression) -> Self {
         Roll { root: expr }
     }

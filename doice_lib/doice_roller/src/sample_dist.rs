@@ -13,6 +13,7 @@ pub struct SampleDist {
 }
 
 impl SampleDist {
+    #[must_use]
     pub fn new() -> Self {
         Default::default()
     }
@@ -28,7 +29,7 @@ impl SampleDist {
     }
 
     pub fn clear(&mut self) {
-        self.dist.clear()
+        self.dist.clear();
     }
 }
 
@@ -60,7 +61,7 @@ impl Rollable for SampleDist {
         }
 
         let mut out_txt = Layouter::default();
-        out_txt.append(&format!("[{}]", out_roll));
+        out_txt.append(&format!("[{out_roll}]"));
 
         super::RollOut {
             value: out_roll,

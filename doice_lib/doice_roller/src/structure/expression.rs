@@ -22,10 +22,9 @@ impl FromStr for Expression {
             // If src starts with '(' the expression is just some stuff in parentheses
             if i == 0 {
                 return Ok(Parenth::from_str(src)?.into());
-            // Otherwise, there is some text before '(', so the expression must be a function
-            } else {
-                return interpret_function(src);
+                // Otherwise, there is some text before '(', so the expression must be a function
             }
+            return interpret_function(src);
         }
 
         // If there are no parentheses, the expression must be a literal or a diceroll

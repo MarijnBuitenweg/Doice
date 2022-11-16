@@ -89,6 +89,6 @@ fn reroll(single_roll: &DiceRoller, roll: &mut RollOut) {
 
     // And add the new roll
     let new_roll = single_roll.roll_quiet();
-    roll.txt.sections[2].0 = format!("->{}]", new_roll);
+    roll.txt.sections[2].0 = format!("->{new_roll}]");
     roll.value = new_roll;
 }

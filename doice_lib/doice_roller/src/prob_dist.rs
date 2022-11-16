@@ -1,7 +1,7 @@
 use std::{
     collections::BTreeMap,
     ops::{Add, Deref, Div, Mul, Neg, Range},
-    time::{Duration},
+    time::Duration,
 };
 
 use instant::Instant;
@@ -21,11 +21,13 @@ pub struct ProbDist(BTreeMap<isize, f64>);
 
 impl ProbDist {
     /// Same as default()
+    #[must_use]
     pub fn new() -> Self {
         Default::default()
     }
 
     /// Generates a normal distribution for the given range of outcomes
+    #[must_use]
     pub fn normal(mean: f64, variance: f64, range: Range<isize>) -> Self {
         let mut out = BTreeMap::new();
         let sigma = variance.sqrt();
@@ -53,10 +55,12 @@ impl ProbDist {
         }
     }
 
+    #[must_use]
     pub fn min(&self) -> Option<isize> {
         self.0.keys().copied().next()
     }
 
+    #[must_use]
     pub fn max(&self) -> Option<isize> {
         self.0.keys().copied().next_back()
     }
@@ -68,11 +72,13 @@ impl ProbDist {
 
     /// Expected output AKA average
     /// Equal to moment(1)
+    #[must_use]
     pub fn expectation(&self) -> f64 {
         self.moment(1)
     }
 
     /// Equal to E(X^n)
+    #[must_use]
     pub fn moment(&self, n: u32) -> f64 {
         self.0
             .iter()
@@ -81,15 +87,18 @@ impl ProbDist {
     }
 
     /// Variance of the distribution, equal to sigma^2
+    #[must_use]
     pub fn var(&self) -> f64 {
         self.moment(2) - self.moment(1).powi(2)
     }
 
     /// The deviation of the distribution, equal to sqrt(var)
+    #[must_use]
     pub fn sigma(&self) -> f64 {
         self.var().sqrt()
     }
 
+    #[must_use]
     pub fn get_rev_cumulative_prob(&self) -> BTreeMap<isize, f64> {
         let mut total = 0.0;
         let mut out = BTreeMap::new();
@@ -102,11 +111,12 @@ impl ProbDist {
         out
     }
 
+    #[must_use]
     pub fn get_cumulative_prob(&self) -> BTreeMap<isize, f64> {
         let mut total = 0.0;
         let mut out = BTreeMap::new();
         // Iter over a BTreeMap is always sorted, yay
-        for (outcome, prob) in self.0.iter() {
+        for (outcome, prob) in &self.0 {
             total += prob;
             out.insert(*outcome, total);
         }
@@ -197,11 +207,15 @@ impl ProbDist {
     }
 
     pub fn clear(&mut self) {
-        self.0.clear()
+        self.0.clear();
     }
 
+    #[must_use]
     pub fn peak(&self) -> Option<(isize, f64)> {
-        self.0.iter().max_by(|x, y| x.1.total_cmp(y.1)).map(|(&k, &v)| (k, v))
+        self.0
+            .iter()
+            .max_by(|x, y| x.1.total_cmp(y.1))
+            .map(|(&k, &v)| (k, v))
     }
 }
 
@@ -290,7 +304,7 @@ impl Mul<&Self> for ProbDist {
                     .collect()
             })
             .reduce(BTreeMap::new, |mut a, b| {
-                for (k, v) in b.iter() {
+                for (k, v) in &b {
                     // Yes, it totally is suspicious to multiply in the add operation
                     // But I've thought about it and it's fine
                     #[allow(clippy::suspicious_arithmetic_impl)]
