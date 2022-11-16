@@ -1,8 +1,5 @@
-#![feature(map_first_last)]
-
-use std::{fmt::Debug, ops::Add, str::FromStr};
-
 use dyn_clone::DynClone;
+use std::{fmt::Debug, ops::Add, str::FromStr};
 
 use self::structure::{lin_comb::LinComb, nop::Nothing};
 
@@ -42,7 +39,7 @@ impl Add<RollOut> for RollOut {
 
     fn add(mut self, rhs: RollOut) -> Self::Output {
         self.txt.append(" ");
-        self.txt = self.txt + rhs.txt;
+        self.txt += rhs.txt;
         self.value += rhs.value;
         self
     }
