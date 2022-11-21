@@ -204,7 +204,7 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
         let ts = Instant::now();
         let max_duration = Duration::from_millis(EXP_UPDATE);
         while ts.elapsed() < max_duration {
-            out.push(roll.roll().value);
+            out.push(roll.roll_quiet());
         }
         (Box::from(out), roll)
     }

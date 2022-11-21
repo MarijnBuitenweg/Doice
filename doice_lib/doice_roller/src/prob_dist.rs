@@ -355,7 +355,7 @@ impl Mul<&Self> for ProbDist {
     }
 }
 
-fn approx_as_norm(dist: ProbDist, rhs: usize) -> ProbDist {
+fn approx_as_norm(dist: &ProbDist, rhs: usize) -> ProbDist {
     let new_mean = rhs as f64 * dist.expectation();
     let new_variance = rhs as f64 * dist.var();
     let new_sigma = new_variance.sqrt();
@@ -377,7 +377,7 @@ impl Mul<usize> for ProbDist {
 
     fn mul(self, rhs: usize) -> Self::Output {
         if rhs > CLT_THRESHOLD {
-            return approx_as_norm(self, rhs);
+            return approx_as_norm(&self, rhs);
         }
 
         let mut out = ProbDist::default();
@@ -387,7 +387,7 @@ impl Mul<usize> for ProbDist {
             out = out + &self;
             // If time is running out, approximate as normal dist
             if timestamp.elapsed() > Duration::from_millis(ADD_TIMEOUT) {
-                return approx_as_norm(self, rhs);
+                return approx_as_norm(&self, rhs);
             }
         }
 
