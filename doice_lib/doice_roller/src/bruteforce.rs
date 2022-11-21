@@ -4,6 +4,7 @@ use instant::Instant;
 
 use super::{ProbDist, Rollable, SampleDist};
 
+/// Trait enabling the bruteforcing of the probability distribution of any rollable thing
 pub trait BruteForceProbDist {
     const BRUTEFORCE_TIME: Duration;
 

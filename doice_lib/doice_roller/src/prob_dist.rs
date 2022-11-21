@@ -9,26 +9,29 @@ use instant::Instant;
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;
 
+use crate::Value;
+
 use super::{Roll, Rollable, SampleDist};
 
 const ADD_TIMEOUT: u64 = 2000; //[ms]
 const TIMEOUT_CHECK_INTERVAL: usize = 20_000; //[iterations]
-const CLT_THRESHOLD: usize = 1000; // Will approximate a summation with more than these terms using CLT
+/// Will approximate a summation with more than these terms using the Central Limit Theorem (CLT)
+const CLT_THRESHOLD: usize = 1000; // [terms]
 
 /// Type representing a valid probability mass function
 #[derive(Clone)]
-pub struct ProbDist(BTreeMap<isize, f64>);
+pub struct ProbDist(BTreeMap<Value, f64>);
 
 impl ProbDist {
     /// Same as default()
     #[must_use]
     pub fn new() -> Self {
-        Default::default()
+        ProbDist::default()
     }
 
     /// Generates a normal distribution for the given range of outcomes
     #[must_use]
-    pub fn normal(mean: f64, variance: f64, range: Range<isize>) -> Self {
+    pub fn normal(mean: f64, variance: f64, range: Range<Value>) -> Self {
         let mut out = BTreeMap::new();
         let sigma = variance.sqrt();
 
@@ -56,12 +59,12 @@ impl ProbDist {
     }
 
     #[must_use]
-    pub fn min(&self) -> Option<isize> {
+    pub fn min(&self) -> Option<Value> {
         self.0.keys().copied().next()
     }
 
     #[must_use]
-    pub fn max(&self) -> Option<isize> {
+    pub fn max(&self) -> Option<Value> {
         self.0.keys().copied().next_back()
     }
 
@@ -99,7 +102,7 @@ impl ProbDist {
     }
 
     #[must_use]
-    pub fn get_rev_cumulative_prob(&self) -> BTreeMap<isize, f64> {
+    pub fn get_rev_cumulative_prob(&self) -> BTreeMap<Value, f64> {
         let mut total = 0.0;
         let mut out = BTreeMap::new();
         // Iter over a BTreeMap is always sorted, yay
@@ -112,7 +115,7 @@ impl ProbDist {
     }
 
     #[must_use]
-    pub fn get_cumulative_prob(&self) -> BTreeMap<isize, f64> {
+    pub fn get_cumulative_prob(&self) -> BTreeMap<Value, f64> {
         let mut total = 0.0;
         let mut out = BTreeMap::new();
         // Iter over a BTreeMap is always sorted, yay
@@ -190,7 +193,7 @@ impl ProbDist {
         }
     }
 
-    pub fn retain<F: FnMut(&isize, &mut f64) -> bool>(&mut self, f: F) {
+    pub fn retain<F: FnMut(&Value, &mut f64) -> bool>(&mut self, f: F) {
         self.0.retain(f);
     }
 
@@ -211,7 +214,7 @@ impl ProbDist {
     }
 
     #[must_use]
-    pub fn peak(&self) -> Option<(isize, f64)> {
+    pub fn peak(&self) -> Option<(Value, f64)> {
         self.0
             .iter()
             .max_by(|x, y| x.1.total_cmp(y.1))
@@ -228,7 +231,7 @@ impl Default for ProbDist {
 }
 
 impl Deref for ProbDist {
-    type Target = BTreeMap<isize, f64>;
+    type Target = BTreeMap<Value, f64>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -274,7 +277,7 @@ impl Add<&Self> for ProbDist {
 impl Add<isize> for ProbDist {
     type Output = Self;
 
-    fn add(self, rhs: isize) -> Self::Output {
+    fn add(self, rhs: Value) -> Self::Output {
         let mut out = BTreeMap::new();
         for (k, v) in self.iter() {
             out.insert(k + rhs, *v);
@@ -424,10 +427,10 @@ impl Neg for ProbDist {
     }
 }
 
-impl TryFrom<BTreeMap<isize, f64>> for ProbDist {
+impl TryFrom<BTreeMap<Value, f64>> for ProbDist {
     type Error = ();
 
-    fn try_from(data: BTreeMap<isize, f64>) -> Result<Self, Self::Error> {
+    fn try_from(data: BTreeMap<Value, f64>) -> Result<Self, Self::Error> {
         // Compute the total
         let total: f64 = data.values().copied().sum();
         // If it's close enough to 1, declare it a valid ProbDist
@@ -439,7 +442,7 @@ impl TryFrom<BTreeMap<isize, f64>> for ProbDist {
     }
 }
 
-impl From<ProbDist> for BTreeMap<isize, f64> {
+impl From<ProbDist> for BTreeMap<Value, f64> {
     fn from(dist: ProbDist) -> Self {
         dist.0
     }

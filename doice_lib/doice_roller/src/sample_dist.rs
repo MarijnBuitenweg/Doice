@@ -5,24 +5,26 @@ use std::{
 
 use rand::{thread_rng, Rng};
 
+use crate::Value;
+
 use super::{Layouter, ProbDist, Rollable};
 
 #[derive(Clone, Default, Debug)]
 pub struct SampleDist {
-    dist: BTreeMap<isize, usize>,
+    dist: BTreeMap<Value, usize>,
 }
 
 impl SampleDist {
     #[must_use]
     pub fn new() -> Self {
-        Default::default()
+        SampleDist::default()
     }
 
-    pub fn add_sample(&mut self, at: isize) {
+    pub fn add_sample(&mut self, at: Value) {
         self.dist.entry(at).and_modify(|val| *val += 1).or_insert(1);
     }
 
-    pub fn add_samples(&mut self, samples: &[isize]) {
+    pub fn add_samples(&mut self, samples: &[Value]) {
         for sample in samples {
             self.add_sample(*sample);
         }
@@ -34,7 +36,7 @@ impl SampleDist {
 }
 
 impl Deref for SampleDist {
-    type Target = BTreeMap<isize, usize>;
+    type Target = BTreeMap<Value, usize>;
 
     fn deref(&self) -> &Self::Target {
         &self.dist

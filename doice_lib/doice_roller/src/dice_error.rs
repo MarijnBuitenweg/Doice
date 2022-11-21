@@ -33,6 +33,6 @@ impl Error for DiceError {}
 
 impl From<Infallible> for DiceError {
     fn from(_: Infallible) -> Self {
-        Default::default()
+        DiceError::default()
     }
 }
