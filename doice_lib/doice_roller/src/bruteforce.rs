@@ -6,8 +6,10 @@ use super::{ProbDist, Rollable, SampleDist};
 
 /// Trait enabling the bruteforcing of the probability distribution of any rollable thing
 pub trait BruteForceProbDist {
+    /// Highly approximate guideline for how long the bruteforcing operation is allowed to take
     const BRUTEFORCE_TIME: Duration;
 
+    /// Calculate the probability distribution by force
     fn bruteforce_probdist(&self) -> ProbDist;
 }
 
@@ -46,7 +48,7 @@ impl<T: Rollable + Sync> BruteForceProbDist for T {
 
 /// If rayon is not enabled, fall back on single threaded impl
 #[cfg(not(feature = "rayon"))]
-impl<T: Rollable> BruteForceProbDist for T {
+impl<T: Rollable + Sync> BruteForceProbDist for T {
     const BRUTEFORCE_TIME: Duration = Duration::from_millis(2000);
 
     fn bruteforce_probdist(&self) -> ProbDist {
