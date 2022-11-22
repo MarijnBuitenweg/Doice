@@ -52,7 +52,7 @@ impl Activity for DiceRoller {
     }
 
     fn name(&self) -> &'static str {
-        "Dice Roller"
+        "Local Dice Roller"
     }
 
     fn focus(&mut self) {

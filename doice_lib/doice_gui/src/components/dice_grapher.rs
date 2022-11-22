@@ -86,12 +86,17 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
     pub fn new(ctx: Context) -> Self {
         let extra_ctx = ctx.clone();
         let exp_ctx = ctx.clone();
-        Self {
+        // Init grapher
+        let mut out = Self {
             dist_gen: ParExecutor::with_notifyer(move || extra_ctx.request_repaint()),
             exp_exec: ParExecutor::with_notifyer(move || exp_ctx.request_repaint()),
             ctx,
+            loading: false,
             ..Default::default()
-        }
+        };
+        // Make sure the graph is displaying something valid
+        out.display_roll("");
+        out
     }
 
     fn remake_bars(&mut self) {

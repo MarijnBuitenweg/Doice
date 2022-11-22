@@ -49,7 +49,7 @@ impl Activity for GlobalAnalyzer {
     }
 
     fn name(&self) -> &'static str {
-        "Global Dice Roller"
+        "Dice Roller"
     }
 
     fn focus(&mut self) {
