@@ -113,6 +113,12 @@ impl Add<&str> for Layouter {
     }
 }
 
+impl AddAssign<&str> for Layouter {
+    fn add_assign(&mut self, rhs: &str) {
+        self.append(rhs);
+    }
+}
+
 impl From<&str> for Layouter {
     /// Creates `Layouter` with default formatting from str
     fn from(src: &str) -> Self {

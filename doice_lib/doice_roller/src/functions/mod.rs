@@ -2,6 +2,7 @@ use self::crit::Crit;
 
 use super::{DiceError, Expression, Rollable};
 
+mod add_nonzero;
 mod adv;
 mod attack;
 mod crit;

@@ -1,5 +1,9 @@
 use dyn_clone::DynClone;
-use std::{fmt::Debug, ops::Add, str::FromStr};
+use std::{
+    fmt::Debug,
+    ops::{Add, AddAssign},
+    str::FromStr,
+};
 
 /// Contains the logic for functional expressions, and the definitions of all functions with corresponding docs
 mod functions;
@@ -42,7 +46,7 @@ pub struct RollOut {
     pub txt: Layouter,
 }
 
-impl Add<RollOut> for RollOut {
+impl Add for RollOut {
     type Output = Self;
 
     /// Adds the numeric, and appends the text fields
@@ -51,6 +55,14 @@ impl Add<RollOut> for RollOut {
         self.txt += rhs.txt;
         self.value += rhs.value;
         self
+    }
+}
+
+impl AddAssign for RollOut {
+    fn add_assign(&mut self, rhs: Self) {
+        self.txt.append(" ");
+        self.txt += rhs.txt;
+        self.value += rhs.value;
     }
 }
 
