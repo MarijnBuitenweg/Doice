@@ -1,6 +1,8 @@
 use itertools::Itertools;
 use std::{cmp::Ordering, collections::BTreeMap, fmt::Debug, str::FromStr};
 
+use crate::Value;
+
 use super::{layouter::Layouter, prob_dist::ProbDist, RollOut, Rollable};
 
 use rand::{distributions::Uniform, prelude::*};
@@ -36,7 +38,7 @@ impl DiceRoller {
 
     /// Rolls 1 die, without producing text
     #[must_use]
-    pub fn roll_quiet(&self) -> isize {
+    fn roll_quiet(&self) -> isize {
         let mut rng = thread_rng();
         let dist = Uniform::<isize>::new(1, self.dice_type as isize + 1);
         match self.advantage.cmp(&0) {
@@ -277,21 +279,16 @@ impl Rollable for DiceRoller {
 
     fn roll_quiet(&self) -> isize {
         let mut rng = thread_rng();
-        let dist = Uniform::<isize>::new(1, self.dice_type as isize + 1);
-        let mut buf = vec![0; 1 + self.advantage.unsigned_abs()];
-        let mut out_txt = Layouter::default();
-        let _do_txt = self.dice_count < MAX_DICE_COUNT / 2_usize.pow(10);
-
-        if self.dice_count > 1 {
-            out_txt.append("[");
-        }
+        let dist = Uniform::<isize>::new(1, self.dice_type as Value + 1);
+        let mut buf = vec![0; 1 + self.advantage.unsigned_abs()].into_boxed_slice();
 
         // Perform the dice rolls, with (dis)advantage
         let rolls = (0..self.dice_count).map(|_| {
             // Refill the buffer with rolls
-            for num in &mut buf {
+            for num in buf.iter_mut() {
                 *num = rng.sample(dist);
             }
+            // Then take the correct value based on the advantage
             match self.advantage.cmp(&0) {
                 Ordering::Equal => buf[0],
                 Ordering::Greater => *buf.iter().max().expect("Empty Buffer?"),
