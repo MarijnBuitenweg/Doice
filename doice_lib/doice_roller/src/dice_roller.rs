@@ -8,7 +8,6 @@ use super::{layouter::Layouter, prob_dist::ProbDist, RollOut, Rollable};
 use rand::{distributions::Uniform, prelude::*};
 
 const MAX_DIE: usize = 1_000_000;
-const MAX_DICE_COUNT: usize = usize::MAX;
 const MAX_TEXT_DICE: usize = 1000;
 
 #[derive(Clone, Default, Debug)]
@@ -34,26 +33,6 @@ impl DiceRoller {
     #[must_use]
     pub fn unmod_avg(&self) -> f64 {
         (self.dice_count * self.dice_type) as f64 / 2.0 + 0.5
-    }
-
-    /// Rolls 1 die, without producing text
-    #[must_use]
-    fn roll_quiet(&self) -> isize {
-        let mut rng = thread_rng();
-        let dist = Uniform::<isize>::new(1, self.dice_type as isize + 1);
-        match self.advantage.cmp(&0) {
-            Ordering::Less => rng
-                .sample_iter(dist)
-                .take(self.advantage.unsigned_abs())
-                .min()
-                .unwrap(),
-            Ordering::Equal => rng.sample(dist),
-            Ordering::Greater => rng
-                .sample_iter(dist)
-                .take(self.advantage as usize)
-                .max()
-                .unwrap(),
-        }
     }
 
     /// Rolls n dice, without producing text
