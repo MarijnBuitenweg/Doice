@@ -1,14 +1,12 @@
-use std::{fmt::Display};
+use std::fmt::Display;
 
-use {
-    doice_utils::{Named, ParSearch, Search},
-};
+use doice_utils::{Named, ParSearch, Search};
 
 use self::{
     alignment::CharacterAlignment,
     field_interpret::{CharacterParseError, ProtoChar},
     inventory::InventoryItem,
-    state_variable::{UpdateMoment},
+    state_variable::UpdateMoment,
 };
 
 use super::{
@@ -22,7 +20,7 @@ mod inventory;
 mod state_variable;
 pub use state_variable::StateVariable;
 mod stats_skills;
-pub use stats_skills::{Skills, Skill, Stats, ProfLvl};
+pub use stats_skills::{ProfLvl, Skill, Skills, Stats};
 
 pub struct ClassLvl<'a> {
     pub lvl: u8,
@@ -31,10 +29,8 @@ pub struct ClassLvl<'a> {
 }
 
 impl<'a> ClassLvl<'a> {
-    /// Input should be formatted like
-    /// ```
-    /// assert_eq!(ClassLvL::from_txt("Great Old One Warlock 3").is_err(), false);
-    /// ```
+    /// Input should be formatted like:
+    /// "Great Old One Warlock 3"
     pub fn from_txt(src: &str, data: &'a DnData) -> Result<ClassLvl<'a>, CharacterParseError> {
         let mut words_rev = src.split_whitespace().rev();
 
