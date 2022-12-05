@@ -5,6 +5,7 @@ use super::{DiceError, Expression, Rollable};
 mod add_nonzero;
 mod adv;
 mod attack;
+mod bernoulli;
 mod crit;
 mod empower;
 mod mirror;
@@ -28,6 +29,7 @@ const FUNCTION_GENERATORS: &[(&str, FunctionGenerator)] = &[
     ("crit", Crit::generate),
     ("atk", attack::Attack::generate),
     ("mirror", mirror::Mirror::generate),
+    ("ber", bernoulli::Bernoulli::generate),
 ];
 
 pub const FUNCTION_DOCS: &[(&str, &str)] = &[
@@ -39,6 +41,7 @@ pub const FUNCTION_DOCS: &[(&str, &str)] = &[
     ("Critical attack damage", Crit::DOC),
     ("Attack", attack::Attack::DOC),
     ("Mirror", mirror::Mirror::DOC),
+    ("Bernoulli / Coin toss", bernoulli::Bernoulli::DOC),
 ];
 
 pub fn interpret_function(src: &str) -> Result<Expression, DiceError> {
