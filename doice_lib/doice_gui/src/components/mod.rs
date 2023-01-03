@@ -4,3 +4,4 @@ pub use dice_grapher::DiceGrapher;
 mod character_sheet;
 mod dice_docs;
 mod dice_history;
+mod initiator;

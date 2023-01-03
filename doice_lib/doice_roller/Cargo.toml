@@ -11,7 +11,7 @@ wasm_comp = ["getrandom/js", "instant/wasm-bindgen", "doice_utils/wasm_comp"]
 [dependencies]
 doice_utils = { version = "0.1.0", path = "../doice_utils" }
 dyn-clone = "1.0.6"
-egui = "0.18.1"
+egui = "0.20.1"
 getrandom = "0.2.7"
 instant = "0.1.12"
 itertools = "0.10.3"

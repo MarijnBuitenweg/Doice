@@ -45,11 +45,7 @@ impl eframe::App for ActivityHost {
 
     fn save(&mut self, _storage: &mut dyn eframe::Storage) {}
 
-    fn on_exit_event(&mut self) -> bool {
-        true
-    }
-
-    fn on_exit(&mut self, _gl: &eframe::glow::Context) {}
+    fn on_exit(&mut self, _gl: std::option::Option<&eframe::glow::Context>) {}
 
     fn auto_save_interval(&self) -> Duration {
         Duration::from_secs(30)

@@ -2,6 +2,7 @@ use std::sync::{Arc, RwLock};
 
 use eframe::{
     egui::{self, Context, Id, RichText, Ui},
+    emath::Align,
     epaint::Color32,
 };
 
@@ -206,11 +207,7 @@ impl eframe::App for DoiceApp {
 
     fn save(&mut self, _storage: &mut dyn eframe::Storage) {}
 
-    fn on_exit_event(&mut self) -> bool {
-        true
-    }
-
-    fn on_exit(&mut self, _gl: &eframe::glow::Context) {}
+    fn on_exit(&mut self, _gl: std::option::Option<&eframe::glow::Context>) {}
 
     fn auto_save_interval(&self) -> std::time::Duration {
         std::time::Duration::from_secs(30)
@@ -600,7 +597,7 @@ impl Taskbar {
             self.prev_alt = crnt_alt;
 
             // Add exit button
-            ui.with_layout(egui::Layout::right_to_left(), |ui| {
+            ui.with_layout(egui::Layout::right_to_left(Align::Center), |ui| {
                 // let mut layout = LayoutJob::default();
                 // layout.append("Exit", 0.0, egui::TextFormat {
                 //     color: Color32::WHITE,
@@ -613,7 +610,7 @@ impl Taskbar {
 
                 // Exit on click
                 if exit.clicked() {
-                    frame.quit();
+                    frame.close();
                 }
             });
         });

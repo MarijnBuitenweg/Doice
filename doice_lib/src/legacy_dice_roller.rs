@@ -1,9 +1,9 @@
-use doice_legacy::{Roller};
+use doice_legacy::Roller;
 
 use doice_gui::{Activity, DCtx};
 use egui::{
-    {Key, Layout, ScrollArea},
     emath::Align,
+    {Key, Layout, ScrollArea},
 };
 
 /// Contains all data about a previous roll
@@ -41,7 +41,7 @@ impl Activity for LegacyDiceRoller {
             ScrollArea::vertical()
                 .max_height(300.0)
                 .auto_shrink([false, true])
-                .stick_to_bottom()
+                .stick_to_bottom(true)
                 .show(ui, |ui| {
                     for e in self.roll_history.iter() {
                         ui.horizontal(|ui| {

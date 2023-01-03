@@ -3,11 +3,13 @@ use std::{collections::BTreeMap, fmt::Write, time::Duration};
 use instant::Instant;
 
 use eframe::{
-    egui::epaint::{text::LayoutJob, Color32},
+    egui::epaint::text::LayoutJob,
     egui::{
         plot::{Bar, BarChart, Plot, VLine},
         Context, DragValue, Key, Layout, Modifiers, RichText, Ui,
     },
+    emath::Align,
+    epaint::Color32,
 };
 
 use {
@@ -18,6 +20,7 @@ use {
 use super::{
     dice_docs::dice_docs,
     dice_history::{DiceHistory, DiceHistoryEntry},
+    initiator::Initiator,
 };
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -25,6 +28,7 @@ enum CurrentPanel {
     Plot,
     History,
     Help,
+    Initiative,
 }
 
 impl CurrentPanel {
@@ -33,6 +37,7 @@ impl CurrentPanel {
             CurrentPanel::Plot => CurrentPanel::Plot,
             CurrentPanel::History => CurrentPanel::Plot,
             CurrentPanel::Help => CurrentPanel::History,
+            CurrentPanel::Initiative => CurrentPanel::Help,
         }
     }
 
@@ -40,7 +45,8 @@ impl CurrentPanel {
         *self = match *self {
             CurrentPanel::Plot => CurrentPanel::History,
             CurrentPanel::History => CurrentPanel::Help,
-            CurrentPanel::Help => CurrentPanel::Help,
+            CurrentPanel::Help => CurrentPanel::Initiative,
+            CurrentPanel::Initiative => CurrentPanel::Initiative,
         }
     }
 }
@@ -80,6 +86,8 @@ pub struct DiceGrapher<const EXP_UPDATE: u64 = 100> {
     exp_samples: SampleDist,
     exp_exec: ParExecutor<(Box<[isize]>, Roll)>,
     exp_run: bool,
+    // Initiative stuff
+    initiator: Initiator,
 }
 
 impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
@@ -363,8 +371,9 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
             ui.selectable_value(&mut self.current_panel, CurrentPanel::Plot, "Plot");
             ui.selectable_value(&mut self.current_panel, CurrentPanel::History, "History");
             ui.selectable_value(&mut self.current_panel, CurrentPanel::Help, "Help");
+            ui.selectable_value(&mut self.current_panel, CurrentPanel::Initiative, "Innit");
 
-            ui.with_layout(Layout::right_to_left(), |ui| {
+            ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                 let prev_checked = self.dc_on;
                 ui.checkbox(&mut self.dc_on, "");
                 //let txt_response = ui.add(TextEdit::singleline(&mut self.dc_text).desired_width(20.0));
@@ -381,6 +390,7 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
             CurrentPanel::Plot => self.show_chart(ui),
             CurrentPanel::History => self.history.show(ui),
             CurrentPanel::Help => dice_docs(ui),
+            CurrentPanel::Initiative => self.initiator.show(ui),
         }
     }
 }
@@ -418,6 +428,8 @@ impl Clone for DiceGrapher {
             exp_bars: self.exp_bars.clone(),
             exp_exec: ParExecutor::with_notifyer(move || exp_ctx.request_repaint()),
             exp_run: self.exp_run,
+            // initiative stuff
+            initiator: self.initiator.clone(),
         }
     }
 }

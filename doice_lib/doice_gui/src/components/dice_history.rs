@@ -1,3 +1,4 @@
+use eframe::emath::Align;
 use instant::{Duration, Instant};
 
 use eframe::egui::epaint::{text::LayoutJob, Color32};
@@ -25,7 +26,7 @@ impl DiceHistory {
             let row_height = ui.text_style_height(&TextStyle::Body) * 2.1;
             ScrollArea::vertical()
                 .always_show_scroll(true)
-                .stick_to_bottom()
+                .stick_to_bottom(true)
                 .auto_shrink([false; 2])
                 .show_rows(ui, row_height, self.entries.len(), |ui, rows| {
                     for entry in self.entries[rows].iter_mut() {
@@ -85,7 +86,7 @@ impl DiceHistoryEntry {
             ui.label(" -> ");
             ui.label(LayoutJob::from(self.result.txt.clone()));
 
-            ui.with_layout(Layout::right_to_left(), |ui| {
+            ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                 ui.label(format!("{} ago", fmt_duration(&self.ts.elapsed())));
             });
         });

@@ -6,7 +6,10 @@ use dnd_data::{
     character::{ProfLvl, Skills, Stats},
 };
 use doice_roller::{DiceRoller, Roll};
-use eframe::egui::{collapsing_header::CollapsingState, Grid, Id, Layout, Ui};
+use eframe::{
+    egui::{collapsing_header::CollapsingState, Grid, Id, Layout, Ui},
+    emath::Align,
+};
 use itertools::Itertools;
 
 impl DoiceShow for Character<'_> {
@@ -134,7 +137,7 @@ pub fn show_skills_helper(skills: &mut Skills, ui: &mut Ui, stats: &Stats, prof:
 }
 
 fn roll_buttons(ui: &mut Ui, bonus: isize, name: &String, ctx: &DCtx) {
-    ui.with_layout(Layout::right_to_left(), |ui| {
+    ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
         let mut opt_roll = None;
         if ui.button("adv").clicked() {
             opt_roll = Some(1);

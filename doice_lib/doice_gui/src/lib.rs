@@ -1,6 +1,7 @@
 // Unstable features
 #![feature(associated_type_bounds)]
 #![feature(is_some_and)]
+#![feature(option_get_or_insert_default)]
 // Allows
 #![allow(dead_code)]
 
