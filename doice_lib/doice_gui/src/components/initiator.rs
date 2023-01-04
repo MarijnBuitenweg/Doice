@@ -10,6 +10,7 @@ struct Item {
     name: String,
     initiative: isize,
     note: String,
+    remove: bool,
 }
 
 impl Item {
@@ -18,6 +19,9 @@ impl Item {
             ui.horizontal_wrapped(|ui| {
                 ui.add(DragValue::new(&mut self.initiative));
                 ui.label(&self.name);
+                if ui.small_button("-").clicked() {
+                    self.remove = true;
+                }
 
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                     ui.text_edit_singleline(&mut self.note);
@@ -84,6 +88,7 @@ impl Initiator {
                     };
                 }
                 if self.current.is_some() {
+                    ui.label("current initiative: ");
                     ui.add(DragValue::new(self.current.get_or_insert_default()));
                 }
             });
@@ -104,5 +109,7 @@ impl Initiator {
         if let Some(response) = response.completed {
             shift_vec(response.from, response.to, &mut self.list);
         }
+
+        self.list.retain(|e| !e.remove);
     }
 }
