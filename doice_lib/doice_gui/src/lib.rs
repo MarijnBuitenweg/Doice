@@ -8,11 +8,14 @@
 /// A rudimentary application window that can run an activity
 #[cfg(feature = "eframe")]
 mod activity_host;
-/// The main application UI
+/// The main application UI for doiceOS, DEPRECATED
 mod application;
 /// Some ui components
 pub mod components;
 mod show_trait;
+/// New ui, tailored for ease-of-use
+#[cfg(feature = "eframe")]
+mod tailored_frames;
 
 // The only things that need to be accessed from the outside
 /// Basic application that can run a single activity
