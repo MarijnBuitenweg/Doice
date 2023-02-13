@@ -1,6 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use doice_lib::*;
+use doice_lib::activities::*;
 
 fn gui_fullscreen_main() {
     // Set options

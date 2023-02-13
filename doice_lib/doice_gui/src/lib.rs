@@ -13,15 +13,13 @@ mod application;
 /// Some ui components
 pub mod components;
 mod show_trait;
-/// New ui, tailored for ease-of-use
-#[cfg(feature = "eframe")]
-mod tailored_frames;
 
 // The only things that need to be accessed from the outside
 /// Basic application that can run a single activity
 #[cfg(feature = "eframe")]
 pub use activity_host::ActivityHost;
 pub use application::Activity;
+pub use application::AppData;
 pub use application::DCtx;
 /// Main application
 #[cfg(feature = "eframe")]
