@@ -3,10 +3,10 @@ use std::str::FromStr;
 use crate::{
     structure::{expression::Expression, lin_comb::LinComb},
     utils::split_once_parenth,
-    DiceError, Layouter, ProbDist, Roll, RollOut, Rollable,
+    DiceError, Layouter, ProbDist, RollOut, Rollable,
 };
 
-use super::{FunctionGenerator, FunctionInit};
+use super::{FunctionInit};
 
 #[derive(Clone, Debug)]
 pub struct AddNonZero {

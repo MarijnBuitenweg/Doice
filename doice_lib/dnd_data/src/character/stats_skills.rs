@@ -83,17 +83,15 @@ impl From<HashMap<String, Skill>> for Skills {
 }
 
 #[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum ProfLvl {
+    #[default]
     Nothing = 0,
     Proficiency = 1,
     Expertise = 2,
 }
 
-impl Default for ProfLvl {
-    fn default() -> Self {
-        ProfLvl::Nothing
-    }
-}
+
 
 impl Display for ProfLvl {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

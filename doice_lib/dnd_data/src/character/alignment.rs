@@ -33,8 +33,10 @@ impl Display for CharacterAlignment {
 }
 
 #[derive(PartialEq, Eq)]
+#[derive(Default)]
 pub enum Entropy {
     Chaotic,
+    #[default]
     Neutral,
     Lawful,
 }
@@ -49,11 +51,7 @@ impl Entropy {
     }
 }
 
-impl Default for Entropy {
-    fn default() -> Self {
-        Entropy::Neutral
-    }
-}
+
 
 impl TryFrom<&str> for Entropy {
     type Error = CharacterParseError;
@@ -75,17 +73,15 @@ impl Display for Entropy {
 }
 
 #[derive(PartialEq, Eq)]
+#[derive(Default)]
 pub enum Goodness {
     Evil,
+    #[default]
     Neutral,
     Good,
 }
 
-impl Default for Goodness {
-    fn default() -> Self {
-        Goodness::Neutral
-    }
-}
+
 
 impl TryFrom<&str> for Goodness {
     type Error = CharacterParseError;

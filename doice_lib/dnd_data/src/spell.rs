@@ -153,8 +153,7 @@ impl<'col, 'item> doice_utils::ParSearch<'col, 'item> for Spells {
     fn par_calculate_distances(&'col self, name: Self::SearchBy) -> Vec<(u32, Self::SearchFor)> {
         self.books
             .iter()
-            .map(|book| book.par_calculate_distances(name).into_iter())
-            .flatten()
+            .flat_map(|book| book.par_calculate_distances(name).into_iter())
             .collect()
     }
 }
