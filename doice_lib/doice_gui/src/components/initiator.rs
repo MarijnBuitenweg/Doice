@@ -1,5 +1,5 @@
 use eframe::{
-    egui::{DragValue, Id, Layout, Ui},
+    egui::{DragValue, Event, Id, Key, Layout, Modifiers, Ui},
     emath::Align,
 };
 use egui_dnd::{utils::shift_vec, DragDropItem, DragDropUi};
@@ -18,10 +18,10 @@ impl Item {
         ui.group(|ui| {
             ui.horizontal_wrapped(|ui| {
                 ui.add(DragValue::new(&mut self.initiative));
-                ui.label(&self.name);
                 if ui.small_button("-").clicked() {
                     self.remove = true;
                 }
+                ui.label(&self.name);
 
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                     ui.text_edit_singleline(&mut self.note);
@@ -44,6 +44,7 @@ pub struct Initiator {
     list: Vec<Item>,
     dnd: DragDropUi,
     current: Option<isize>,
+    clear_confirm: bool,
 }
 
 impl Initiator {
@@ -52,7 +53,7 @@ impl Initiator {
     }
 
     pub fn show(&mut self, ui: &mut Ui) {
-        // Add stuff
+        // Entry adder
         ui.group(|ui| {
             ui.horizontal(|ui| {
                 if ui.small_button("+").clicked() {
@@ -60,18 +61,36 @@ impl Initiator {
                     self.pre_item.id += 1;
                 }
 
-                ui.add(DragValue::new(&mut self.pre_item.initiative));
+                let innit = ui.add(DragValue::new(&mut self.pre_item.initiative));
                 ui.label("name: ");
-                ui.text_edit_singleline(&mut self.pre_item.name);
+                let name = ui.text_edit_singleline(&mut self.pre_item.name);
                 ui.label("note: ");
-                ui.text_edit_singleline(&mut self.pre_item.note);
+                let note = ui.text_edit_singleline(&mut self.pre_item.note);
+
+                if (innit.lost_focus() || name.lost_focus() || note.lost_focus())
+                    && ui.input().key_pressed(Key::Enter)
+                {
+                    self.list.push(self.pre_item.clone());
+                    self.pre_item.id += 1;
+                    innit.request_focus();
+                }
+
+                // if innit.gained_focus() || name.gained_focus() || note.gained_focus() {
+                //     ui.input_mut().events.push(Event::Key {
+                //         key: Key::A,
+                //         pressed: true,
+                //         modifiers: Modifiers::CTRL,
+                //     });
+                // }
             });
         });
+
+        // List control
         ui.group(|ui| {
             ui.horizontal(|ui| {
                 if ui.button("Sort").clicked() {
-                    self.list.sort_by_key(|item| item.initiative);
-                    self.list.reverse();
+                    self.list.sort_by_key(|item| -item.initiative);
+                    //self.list.reverse();
                 }
                 if ui.button("Next").clicked() {
                     self.current = if let Some(i) = self.current {
@@ -86,6 +105,17 @@ impl Initiator {
                             .max_by_key(|e| e.initiative)
                             .map(|e| e.initiative)
                     };
+                }
+                if self.clear_confirm {
+                    let sure = ui.button("Sure?");
+                    if sure.clicked() {
+                        self.list.clear();
+                        self.clear_confirm = false;
+                    } else if sure.lost_focus() {
+                        self.clear_confirm = false;
+                    }
+                } else {
+                    self.clear_confirm = ui.button("Clear").clicked();
                 }
                 if self.current.is_some() {
                     ui.label("current initiative: ");
