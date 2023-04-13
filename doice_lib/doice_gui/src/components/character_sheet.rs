@@ -159,7 +159,9 @@ fn roll_buttons(ui: &mut Ui, bonus: isize, name: &String, ctx: &DCtx) {
             } else if adv == -1 {
                 txt += " with disadv";
             }
-            roller.display_roll(Roll::from_expr(DiceRoller::new(20, 1, adv).into()) + bonus);
+            roller.display_roll(
+                Roll::from_expr(DiceRoller::new(20, 1, adv).into()).with_text(&txt) + bonus,
+            );
             roller.roll();
         }
     });

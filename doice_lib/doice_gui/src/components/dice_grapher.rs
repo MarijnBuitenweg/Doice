@@ -1,4 +1,8 @@
-use std::{collections::BTreeMap, fmt::Write, time::Duration};
+use std::{
+    collections::BTreeMap,
+    fmt::{Display, Write},
+    time::Duration,
+};
 
 use instant::Instant;
 
@@ -158,7 +162,11 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
         }
     }
 
-    pub fn display_roll<T: TryInto<Roll, Error: Into<DiceError>>>(&mut self, into_roll: T) {
+    pub fn display_roll<T: TryInto<Roll, Error: Into<DiceError>> + Display>(
+        &mut self,
+        into_roll: T,
+    ) {
+        let txt = into_roll.to_string();
         match into_roll.try_into() {
             Ok(roll) => {
                 self.display_error = None;
@@ -170,6 +178,7 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
                 self.exp_dist.clear();
                 self.exp_samples.clear();
                 self.exp_exec.clear_tasks();
+                self.roll_txt = txt;
                 if self.exp_run {
                     self.init_experiment();
                 }

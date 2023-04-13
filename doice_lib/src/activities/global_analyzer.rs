@@ -4,7 +4,6 @@ use doice_gui::{Activity, DCtx};
 
 #[derive(Clone, Default)]
 pub struct GlobalAnalyzer {
-    focus: bool,
     text_in: String,
     prev_input: String,
 }
@@ -36,12 +35,9 @@ impl Activity for GlobalAnalyzer {
             field.request_focus();
         }
 
-        if self.focus {
+        // Focus dice field on press of Home
+        if !field.has_focus() && ui.input().key_pressed(Key::Home) {
             field.request_focus();
-        }
-
-        if field.has_focus() && !self.focus {
-            field.surrender_focus();
         }
 
         // Plotting
@@ -52,13 +48,9 @@ impl Activity for GlobalAnalyzer {
         "Dice Roller"
     }
 
-    fn focus(&mut self) {
-        self.focus = true;
-    }
+    fn focus(&mut self) {}
 
-    fn lose_focus(&mut self) {
-        self.focus = false;
-    }
+    fn lose_focus(&mut self) {}
 
     fn resize(&self) -> bool {
         true

@@ -4,7 +4,6 @@ use doice_gui::{components::DiceGrapher, Activity, DCtx};
 
 #[derive(Clone, Default)]
 pub struct DiceRoller {
-    focus: bool,
     text_in: String,
     prev_input: String,
     plotter: DiceGrapher,
@@ -39,12 +38,9 @@ impl Activity for DiceRoller {
             field.request_focus();
         }
 
-        if self.focus {
-            //field.request_focus();
-        }
-
-        if field.has_focus() && !self.focus {
-            field.surrender_focus();
+        // Focus dice field on press of Home
+        if !field.has_focus() && ui.input().key_pressed(Key::Home) {
+            field.request_focus();
         }
 
         // Plotting
@@ -55,13 +51,9 @@ impl Activity for DiceRoller {
         "Local Dice Roller"
     }
 
-    fn focus(&mut self) {
-        self.focus = true;
-    }
+    fn focus(&mut self) {}
 
-    fn lose_focus(&mut self) {
-        self.focus = false;
-    }
+    fn lose_focus(&mut self) {}
 
     fn resize(&self) -> bool {
         true

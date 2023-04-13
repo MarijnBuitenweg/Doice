@@ -7,6 +7,7 @@ use std::{collections::BTreeMap, ops::Deref};
 
 use doice_utils::{Named, Search};
 
+/// Should not be included in exe if flag is not set
 #[cfg(feature = "include_data")]
 pub static SPELL_SOURCE: Option<Dir> = Some(include_dir!("$CARGO_MANIFEST_DIR/src/data/spells"));
 #[cfg(not(feature = "include_data"))]
@@ -117,7 +118,7 @@ impl Spells {
                     .collect()
             } else {
                 Box::new([])
-            }
+            },
         }
     }
 }

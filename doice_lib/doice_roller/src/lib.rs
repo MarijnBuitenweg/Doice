@@ -1,7 +1,7 @@
 use dyn_clone::DynClone;
 use std::{
-    fmt::Debug,
-    ops::{Add, AddAssign},
+    fmt::{Debug, Display},
+    ops::{Add, AddAssign, Deref},
     str::FromStr,
 };
 
@@ -93,6 +93,15 @@ impl Roll {
     pub fn from_expr(expr: Expression) -> Self {
         Roll { root: expr }
     }
+
+    /// Adds text to the roll, for display purposes
+    #[must_use]
+    pub fn with_text(self, txt: &str) -> TextRoll {
+        TextRoll {
+            roll: self,
+            txt: txt.into(),
+        }
+    }
 }
 
 impl Add<isize> for Roll {
@@ -130,6 +139,12 @@ impl TryFrom<&str> for Roll {
     }
 }
 
+impl From<TextRoll> for Roll {
+    fn from(value: TextRoll) -> Self {
+        value.roll
+    }
+}
+
 impl Rollable for Roll {
     /// Rolls the expression
     fn roll(&self) -> RollOut {
@@ -155,5 +170,82 @@ impl Default for Roll {
         Roll {
             root: Nothing::new().into(),
         }
+    }
+}
+
+/// Roll, but with text data
+#[derive(Default, Debug, Clone)]
+pub struct TextRoll {
+    roll: Roll,
+    txt: String,
+}
+
+impl Deref for TextRoll {
+    type Target = Roll;
+
+    fn deref(&self) -> &Self::Target {
+        &self.roll
+    }
+}
+
+impl Display for TextRoll {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.txt)
+    }
+}
+
+impl Add<isize> for TextRoll {
+    type Output = Self;
+
+    /// Adds a simple integer to the roll
+    /// This operation is not nearly as efficient as most other additions, but o well
+    fn add(self, rhs: Value) -> Self::Output {
+        let expr = self.roll.root;
+        let mut new_root = LinComb::from(expr);
+        new_root.add_term(rhs.into());
+        TextRoll {
+            roll: Roll::from_expr(new_root.into()),
+            txt: self.txt,
+        }
+    }
+}
+
+impl FromStr for TextRoll {
+    type Err = DiceError;
+
+    /// Attempts to parse the str into an expression
+    fn from_str(src: &str) -> Result<Self, Self::Err> {
+        Ok(TextRoll {
+            roll: src.parse()?,
+            txt: src.into(),
+        })
+    }
+}
+
+impl TryFrom<&str> for TextRoll {
+    type Error = DiceError;
+
+    /// Delegates to `FromStr::from_str`
+    fn try_from(src: &str) -> Result<Self, Self::Error> {
+        Self::from_str(src)
+    }
+}
+
+impl Rollable for TextRoll {
+    /// Rolls the expression
+    fn roll(&self) -> RollOut {
+        self.root.roll()
+    }
+
+    /// Obtains and sanitizes the probability distribution of the expression
+    fn dist(&self) -> ProbDist {
+        let mut dist = self.root.dist();
+        dist.remove_null();
+        dist
+    }
+
+    /// Rolls the expression, quietly
+    fn roll_quiet(&self) -> isize {
+        self.root.roll_quiet()
     }
 }

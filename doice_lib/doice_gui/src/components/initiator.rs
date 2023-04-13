@@ -59,6 +59,7 @@ impl Initiator {
                 if ui.small_button("+").clicked() {
                     self.list.push(self.pre_item.clone());
                     self.pre_item.id += 1;
+                    self.pre_item = Default::default();
                 }
 
                 let innit = ui.add(DragValue::new(&mut self.pre_item.initiative));
@@ -72,6 +73,7 @@ impl Initiator {
                 {
                     self.list.push(self.pre_item.clone());
                     self.pre_item.id += 1;
+                    self.pre_item = Default::default();
                     innit.request_focus();
                 }
 
@@ -111,7 +113,7 @@ impl Initiator {
                     if sure.clicked() {
                         self.list.clear();
                         self.clear_confirm = false;
-                    } else if sure.lost_focus() {
+                    } else if sure.clicked_elsewhere() {
                         self.clear_confirm = false;
                     }
                 } else {

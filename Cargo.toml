@@ -1,6 +1,6 @@
 [package]
 name = "doice"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["Marijn Buitenweg"]
 edition = "2021"
 
@@ -16,9 +16,11 @@ members = [
     "doice_lib",
     "bin/doice_wasm",
     "bin/doice_smol",
+    "bin/doice_OS",
 ]
 
 [dependencies]
+clap = { version = "4.2.1", features = ["derive"] }
 doice_lib = { version = "0.1.0", path = "doice_lib", features = ["rayon", "include_data", "eframe"] }
 
 [profile.release]
