@@ -9,7 +9,7 @@ use instant::Instant;
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;
 
-use crate::Value;
+use crate::{DiceError, Value};
 
 use super::{Roll, Rollable, SampleDist};
 
@@ -220,6 +220,53 @@ impl ProbDist {
             .max_by(|x, y| x.1.total_cmp(y.1))
             .map(|(&k, &v)| (k, v))
     }
+
+    /// Convolutes/adds two probdists
+    pub fn convolute(&self, rhs: &ProbDist) -> ProbDist {
+        let (shortest, longest) = if self.len() > rhs.len() {
+            (rhs, self)
+        } else {
+            (self, rhs)
+        };
+
+        let mut out = BTreeMap::new();
+        for (outcome, prob) in shortest.iter() {
+            for (k, v) in longest.iter() {
+                out.entry(outcome + k)
+                    .and_modify(|e| *e += prob * v)
+                    .or_insert(prob * v);
+            }
+        }
+
+        ProbDist(out)
+    }
+
+    /// Ignores negative numbers for now
+    pub fn rep_auto_convolution(&self, rep: &ProbDist) -> Result<ProbDist, DiceError> {
+        Ok(rep
+            .par_iter()
+            .filter(|(outcome, _)| outcome.is_positive())
+            .map(|(outcome, prob)| {
+                // Create an autoconvoluted version of yourself
+                let mut tmp = self.clone() * (*outcome as usize);
+                // Then scale it based on the probability of this multiplicity occurring
+                for val in tmp.0.values_mut() {
+                    *val *= *prob;
+                }
+                tmp
+            })
+            .reduce(
+                || ProbDist(BTreeMap::new()),
+                |mut a, b| {
+                    // Then fold all maps back into one
+                    // By adding all data from b to a
+                    for (k, v) in b.iter() {
+                        a.0.entry(*k).and_modify(|p| *p += v).or_insert(*v);
+                    }
+                    a
+                },
+            ))
+    }
 }
 
 impl Default for ProbDist {
@@ -301,12 +348,15 @@ impl Mul<&Self> for ProbDist {
         let out = shortest
             .par_iter()
             .map(|(&outcome, &prob)| {
+                // Multiply every entry in shortest with the longest map
                 longest
                     .par_iter()
                     .map(move |(k, v)| (k * outcome, prob * v))
                     .collect()
             })
             .reduce(BTreeMap::new, |mut a, b| {
+                // Then fold all maps back into one
+                // By adding all data from b to a
                 for (k, v) in &b {
                     // Yes, it totally is suspicious to multiply in the add operation
                     // But I've thought about it and it's fine
