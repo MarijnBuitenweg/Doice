@@ -1,12 +1,13 @@
 use std::str::FromStr;
 
 use crate::{
+    bruteforce::BruteForceProbDist,
     structure::{expression::Expression, lin_comb::LinComb},
     utils::split_once_parenth,
     DiceError, Layouter, ProbDist, RollOut, Rollable,
 };
 
-use super::{FunctionInit};
+use super::FunctionInit;
 
 #[derive(Clone, Debug)]
 pub struct AddNonZero {
@@ -41,6 +42,6 @@ impl Rollable for AddNonZero {
     }
 
     fn dist(&self) -> ProbDist {
-        todo!()
+        self.bruteforce_probdist()
     }
 }

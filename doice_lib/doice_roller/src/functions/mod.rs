@@ -6,6 +6,7 @@ mod add_nonzero;
 mod adv;
 mod attack;
 mod bernoulli;
+mod betting_magic;
 mod crit;
 mod empower;
 mod mirror;
@@ -30,6 +31,10 @@ const FUNCTION_GENERATORS: &[(&str, FunctionGenerator)] = &[
     ("atk", attack::Attack::generate),
     ("mirror", mirror::Mirror::generate),
     ("ber", bernoulli::Bernoulli::generate),
+    ("addnz", add_nonzero::AddNonZero::generate),
+    ("bet", betting_magic::BettingMagic::generate),
+    ("bet2", betting_magic::BettingMagic2::generate),
+    ("bet3", betting_magic::BettingMagic3::generate),
 ];
 
 pub const FUNCTION_DOCS: &[(&str, &str)] = &[
@@ -42,6 +47,7 @@ pub const FUNCTION_DOCS: &[(&str, &str)] = &[
     ("Attack", attack::Attack::DOC),
     ("Mirror", mirror::Mirror::DOC),
     ("Bernoulli / Coin toss", bernoulli::Bernoulli::DOC),
+    ("Add nonzero", add_nonzero::AddNonZero::DOC),
 ];
 
 pub fn interpret_function(src: &str) -> Result<Expression, DiceError> {
