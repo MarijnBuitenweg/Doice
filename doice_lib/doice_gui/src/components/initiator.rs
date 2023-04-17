@@ -30,6 +30,13 @@ impl Item {
             })
         });
     }
+
+    pub fn reset(&mut self) {
+        *self = Item {
+            id: self.id,
+            ..Default::default()
+        };
+    }
 }
 
 impl DragDropItem for Item {
@@ -59,7 +66,7 @@ impl Initiator {
                 if ui.small_button("+").clicked() {
                     self.list.push(self.pre_item.clone());
                     self.pre_item.id += 1;
-                    self.pre_item = Default::default();
+                    self.pre_item.reset();
                 }
 
                 let innit = ui.add(DragValue::new(&mut self.pre_item.initiative));
@@ -73,7 +80,7 @@ impl Initiator {
                 {
                     self.list.push(self.pre_item.clone());
                     self.pre_item.id += 1;
-                    self.pre_item = Default::default();
+                    self.pre_item.reset();
                     innit.request_focus();
                 }
 
