@@ -7,6 +7,7 @@ edition = "2021"
 
 [features]
 rayon = ["dnd_data/rayon", "doice_roller/rayon"]
+# For some reason removing the connection between this include_data and dnd_data/include_data is the only way to not include data
 include_data = ["dnd_data/include_data"]
 wasm_comp = ["doice_roller/wasm_comp", "instant/wasm-bindgen", "dnd_data/wasm_comp", "doice_utils/wasm_comp"]
 
@@ -18,4 +19,4 @@ dyn-clone = "1.0.6"
 eframe = { version = "0.20.1", optional = true }
 instant = "0.1.12"
 itertools = "0.10.3"
-egui_dnd = "0.1.0"
+egui_dnd = "0.2.0"

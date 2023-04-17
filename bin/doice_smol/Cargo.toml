@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.2.1", features = ["derive"] }
+# Does not use include_data, but data is still included unless action is taken in doice_gui's cargo.toml
 doice_lib = { version = "0.1.0", path = "../../doice_lib", features = ["eframe", "rayon"] }
