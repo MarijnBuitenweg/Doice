@@ -11,7 +11,7 @@ use doice_lib::activities::*;
 struct Cli {}
 
 fn main() {
-    let _cli = Cli::parse();
+    let cli = Cli::parse();
 
     // Set options
     let options = eframe::NativeOptions {
