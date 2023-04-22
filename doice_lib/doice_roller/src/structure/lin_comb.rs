@@ -6,7 +6,7 @@ use crate::{prob_dist::ProbDist, DiceError, Expression, RollOut, Rollable};
 use super::term::{Sign, Term};
 
 /// Strips the input string of its whitespace, and rips out anything in parentheses
-fn strip_parenth(src: &str) -> (String, Vec<String>) {
+fn _strip_parenth(src: &str) -> (String, Vec<String>) {
     let mut stripped: String = src.chars().filter(|c| !c.is_whitespace()).collect();
     //println!("Testing...");
     //println!("After first strip: {}", stripped);
@@ -45,7 +45,7 @@ fn strip_parenth(src: &str) -> (String, Vec<String>) {
 }
 
 /// Fills the space between parentheses in terms with the given strings
-fn fill_parentheses(terms: &mut [String], parenth: &[String]) {
+fn _fill_parentheses(terms: &mut [String], parenth: &[String]) {
     // Find all terms with parentheses
     let par_terms = terms.iter_mut().filter(|s| s.contains("()"));
     let mut par_text = parenth.iter();
@@ -187,14 +187,14 @@ impl Rollable for LinComb {
 mod tests {
     use std::str::FromStr;
 
-    use crate::structure::lin_comb::fill_parentheses;
+    use crate::structure::lin_comb::_fill_parentheses;
 
-    use super::{strip_parenth, LinComb};
+    use super::{LinComb, _strip_parenth};
 
     #[test]
     fn strip_parenth_test() {
         let source = "aFunction(an expression) + some number + fun() + sin(2*pi)";
-        let (stripped, parenth) = strip_parenth(source);
+        let (stripped, parenth) = _strip_parenth(source);
         assert_eq!(stripped, "aFunction()+somenumber+fun()+sin()");
         assert_eq!(parenth.len(), 3);
         assert_eq!(parenth[0], "anexpression");
@@ -202,7 +202,7 @@ mod tests {
         assert_eq!(parenth[2], "2*pi");
 
         let mut stripped: [String; 1] = [stripped];
-        fill_parentheses(&mut stripped, &parenth);
+        _fill_parentheses(&mut stripped, &parenth);
         assert_eq!(
             stripped[0],
             "aFunction(anexpression)+somenumber+fun()+sin(2*pi)"

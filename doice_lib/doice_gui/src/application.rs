@@ -392,7 +392,7 @@ impl Taskbar {
 
     /// Makes it so that the activity can be launched, also adds it to the ui automatigally.
     fn register_activity<T: Activity + Default + 'static>(&mut self) {
-        self.launchable_act.push(Box::new(T::default()));
+        self.launchable_act.push(Box::<T>::default());
     }
 
     // /// Non-pub helper function containing the logic to start a new activity

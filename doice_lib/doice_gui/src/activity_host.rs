@@ -18,7 +18,7 @@ pub struct ActivityHost {
 impl ActivityHost {
     // Create a new activityhost hosting the provided activity
     pub fn new<T: Activity + Clone + Default + 'static>(cc: &eframe::CreationContext<'_>) -> Self {
-        let mut act = Box::new(T::default());
+        let mut act = Box::<T>::default();
         let ctx = cc.egui_ctx.clone();
         act.init(ctx);
         ActivityHost {

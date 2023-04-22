@@ -27,8 +27,9 @@ use super::{
     initiator::Initiator,
 };
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 enum CurrentPanel {
+    #[default]
     Plot,
     History,
     Help,
@@ -52,12 +53,6 @@ impl CurrentPanel {
             CurrentPanel::Help => CurrentPanel::Initiative,
             CurrentPanel::Initiative => CurrentPanel::Initiative,
         }
-    }
-}
-
-impl Default for CurrentPanel {
-    fn default() -> Self {
-        CurrentPanel::Plot
     }
 }
 

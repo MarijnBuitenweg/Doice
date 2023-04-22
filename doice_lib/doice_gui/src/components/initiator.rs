@@ -1,5 +1,5 @@
 use eframe::{
-    egui::{DragValue, Event, Id, Key, Layout, Modifiers, Ui},
+    egui::{DragValue, Id, Key, Layout, Ui},
     emath::Align,
 };
 use egui_dnd::{utils::shift_vec, DragDropItem, DragDropUi};
