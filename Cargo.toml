@@ -10,6 +10,7 @@ edition = "2021"
 members = [
     "doice_lib/dnd_data",
     "doice_lib/doice_gui",
+    "doice_lib/doice_prob",
     "doice_lib/doice_roller",
     "doice_lib/doice_utils",
     "doice_lib/doice_legacy",
