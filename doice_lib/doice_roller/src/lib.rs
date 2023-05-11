@@ -8,9 +8,9 @@ use std::{
 /// Contains the logic for functional expressions, and the definitions of all functions with corresponding docs
 mod functions;
 pub use functions::FUNCTION_DOCS;
-/// Defines the `ProbDist` type
-mod prob_dist;
-pub use prob_dist::ProbDist;
+// /// Defines the `ProbDist` type
+// mod prob_dist;
+// pub use prob_dist::ProbDist;
 /// Defines the `SampleDist` type
 mod sample_dist;
 pub use sample_dist::SampleDist;
@@ -38,6 +38,7 @@ mod test;
 
 /// The type that is to be used as the numeric result of a roll
 pub type Value = isize;
+pub type ProbDist = doice_prob::distributions::ProbDist<f64>;
 
 /// Struct containing the output of a roll, in both text and numeric formats
 #[derive(Default, Clone)]

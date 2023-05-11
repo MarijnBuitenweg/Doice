@@ -1,8 +1,10 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, iter::Sum, ops::Div};
 
 use num::One;
 
 use crate::{chance::Chance, prelude::*};
+
+use super::SampleDist;
 
 /// Can represent any arbitrary dicrete probability distribution.
 pub struct ProbDist<T>(BTreeMap<isize, Chance<T>>);
@@ -51,6 +53,30 @@ impl<T: BasicNum + Clone> ProbDist<T> {
         }
 
         out
+    }
+
+    /// Scale the probabilities such that the total probability is 1
+    pub fn proper_scale(&mut self) {
+        let total_prob: Chance<T> = self.0.values().cloned().sum();
+        if total_prob != Chance::one() {
+            let scale_factor = Chance::one() / total_prob;
+            for v in self.0.values_mut() {
+                *v = *v * scale_factor;
+            }
+        }
+    }
+
+    pub fn read_samples(&mut self, samples: &SampleDist) {
+        let total = samples.values().sum();
+        // First, read all the sample counts
+        for (&outcome, &sample) in samples.iter() {
+            self.0
+                .entry(outcome)
+                .and_modify(|v| *v = sample as f64)
+                .or_insert(sample as f64);
+        }
+        // Then rescale it
+        self.proper_scale();
     }
 }
 
