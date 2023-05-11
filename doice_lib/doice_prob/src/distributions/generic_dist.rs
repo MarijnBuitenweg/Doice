@@ -47,7 +47,7 @@ impl<T: BasicNum + Clone> ProbDist<T> {
         // Iter over a BTreeMap is always sorted, yay
         for (outcome, prob) in self.0.iter().rev() {
             total = total + prob.inner().clone();
-            out.insert(*outcome, total);
+            out.insert(*outcome, total.clone());
         }
 
         out

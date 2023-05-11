@@ -5,7 +5,6 @@ use std::{
 };
 
 use num::{One, ToPrimitive, Zero};
-use overload::overload;
 use thiserror::Error;
 
 use crate::numerics::{BasicNum, SignInfo};
@@ -81,42 +80,42 @@ impl<T: BasicNum> Add<Self> for Chance<T> {
     }
 }
 
-impl<T: BasicNum> Add<&Self> for Chance<T> {
-    type Output = Self;
+impl<T: BasicNum + Clone> Add<&Self> for Chance<T> {
+    type Output = Chance<T>;
 
     /// # Panics
     /// - If the result is greater than 1
     /// - If the result is under 0
     fn add(self, rhs: &Self) -> Self::Output {
-        let out = Chance(self.0 + rhs.0);
+        let out = Chance(self.0 + rhs.0.clone());
         out.validate()
             .expect("chance addition should produce a valid chance");
         out
     }
 }
 
-impl<T: BasicNum> Add<Self> for &Chance<T> {
+impl<T: BasicNum + Clone> Add<Self> for &Chance<T> {
     type Output = Chance<T>;
 
     /// # Panics
     /// - If the result is greater than 1
     /// - If the result is under 0
     fn add(self, rhs: Self) -> Self::Output {
-        let out = Chance(self.0 + rhs.0);
+        let out = Chance(self.0.clone() + rhs.0.clone());
         out.validate()
             .expect("chance addition should produce a valid chance");
         out
     }
 }
 
-impl<T: BasicNum> Add<&Self> for &Chance<T> {
+impl<T: BasicNum + Clone> Add<&Self> for &Chance<T> {
     type Output = Chance<T>;
 
     /// # Panics
     /// - If the result is greater than 1
     /// - If the result is under 0
     fn add(self, rhs: &Self) -> Self::Output {
-        let out = Chance(self.0 + rhs.0);
+        let out = Chance(self.0.clone() + rhs.0.clone());
         out.validate()
             .expect("chance addition should produce a valid chance");
         out
@@ -168,30 +167,30 @@ impl<T: BasicNum> Mul<Self> for Chance<T> {
     }
 }
 
-impl<T: BasicNum> Mul<&Self> for Chance<T> {
+impl<T: BasicNum + Clone> Mul<&Self> for Chance<T> {
     type Output = Self;
 
     /// Equivalent to mul_unchecked thanks to type constraints.
     fn mul(self, rhs: &Self) -> Self::Output {
-        Chance(self.0 * rhs.0)
+        Chance(self.0 * rhs.0.clone())
     }
 }
 
-impl<T: BasicNum> Mul<Self> for &Chance<T> {
+impl<T: BasicNum + Clone> Mul<Self> for &Chance<T> {
     type Output = Chance<T>;
 
     /// Equivalent to mul_unchecked thanks to type constraints.
     fn mul(self, rhs: Self) -> Self::Output {
-        Chance(self.0 * rhs.0)
+        Chance(self.0.clone() * rhs.0.clone())
     }
 }
 
-impl<T: BasicNum> Mul<&Self> for &Chance<T> {
+impl<T: BasicNum + Clone> Mul<&Self> for &Chance<T> {
     type Output = Chance<T>;
 
     /// Equivalent to mul_unchecked thanks to type constraints.
     fn mul(self, rhs: &Self) -> Self::Output {
-        Chance(self.0 * rhs.0)
+        Chance(self.0.clone() * rhs.0.clone())
     }
 }
 
@@ -315,6 +314,6 @@ mod tests {
 
     #[test]
     pub fn from_test() {
-        let chance: Chance<_> = 0.3.to_chance().unwrap();
+        let _chance: Chance<_> = 0.3.to_chance().unwrap();
     }
 }
