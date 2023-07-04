@@ -13,7 +13,6 @@ pub use functions::FUNCTION_DOCS;
 // pub use prob_dist::ProbDist;
 /// Defines the `SampleDist` type
 mod sample_dist;
-pub use sample_dist::SampleDist;
 /// Defines types representing structures present in expressions, such as linear combinations or parentheses
 mod structure;
 use structure::{expression::Expression, lin_comb::LinComb, nop::Nothing};
@@ -39,6 +38,7 @@ mod test;
 /// The type that is to be used as the numeric result of a roll
 pub type Value = isize;
 pub type ProbDist = doice_prob::distributions::ProbDist<f64>;
+pub use doice_prob::distributions::SampleDist;
 
 /// Struct containing the output of a roll, in both text and numeric formats
 #[derive(Default, Clone)]

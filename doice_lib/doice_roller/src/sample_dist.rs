@@ -3,6 +3,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
+use doice_prob::distributions::SampleDist;
 use rand::{thread_rng, Rng};
 
 use crate::Value;

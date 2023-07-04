@@ -3,7 +3,7 @@ use std::{cmp::Ordering, collections::BTreeMap, fmt::Debug, str::FromStr};
 
 use crate::Value;
 
-use super::{layouter::Layouter, prob_dist::ProbDist, RollOut, Rollable};
+use super::{layouter::Layouter, ProbDist, RollOut, Rollable};
 
 use rand::{distributions::Uniform, prelude::*};
 
@@ -240,7 +240,7 @@ impl Rollable for DiceRoller {
         }
     }
 
-    fn dist(&self) -> super::prob_dist::ProbDist {
+    fn dist(&self) -> super::ProbDist {
         // Build distribution for single die
         let density: f64 = 1.0f64 / (self.dice_type as f64);
         let dist: BTreeMap<_, _> = (1..=self.dice_type)
