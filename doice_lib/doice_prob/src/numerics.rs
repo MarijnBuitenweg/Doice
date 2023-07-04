@@ -1,7 +1,7 @@
-use num::{Bounded, Num};
+use num::{Bounded, FromPrimitive, Num};
 
-pub trait BasicNum: Num + Bounded + PartialOrd {}
-impl<T: Num + Bounded + PartialOrd> BasicNum for T {}
+pub trait BasicNum: Num + Bounded + PartialOrd + FromPrimitive {}
+impl<T: Num + Bounded + PartialOrd + FromPrimitive> BasicNum for T {}
 
 pub trait SignInfo {
     fn seems_signed() -> bool;
