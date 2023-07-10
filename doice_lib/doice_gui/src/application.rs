@@ -1,4 +1,7 @@
-use std::sync::{Arc, RwLock};
+use std::{
+    rc::Rc,
+    sync::{Arc, RwLock},
+};
 
 use eframe::{
     egui::{self, Context, Id, RichText, Ui},
@@ -19,7 +22,7 @@ pub struct DCtx {
     focus: Option<usize>,
     changed_focus: bool,
     crnt_i: usize,
-    data: Arc<AppData>,
+    data: Rc<AppData>,
 }
 
 impl DCtx {
@@ -27,7 +30,7 @@ impl DCtx {
         focus: Option<usize>,
         changed_focus: bool,
         crnt_i: usize,
-        data: Arc<AppData>,
+        data: Rc<AppData>,
     ) -> Self {
         Self {
             focus,
@@ -57,7 +60,7 @@ impl DCtx {
         }
     }
 
-    pub fn data(&self) -> &Arc<AppData> {
+    pub fn data(&self) -> &Rc<AppData> {
         &self.data
     }
 }
@@ -92,7 +95,7 @@ impl AppData {
 #[cfg(feature = "eframe")]
 pub struct DoiceApp {
     taskbar: Taskbar,
-    data: Arc<AppData>,
+    data: Rc<AppData>,
 }
 
 #[cfg(feature = "eframe")]
@@ -105,7 +108,7 @@ impl DoiceApp {
         // for e.g. egui::PaintCallback.
 
         Self {
-            data: Arc::new(AppData::new(cc)),
+            data: Rc::new(AppData::new(cc)),
             taskbar: Default::default(),
         }
     }
@@ -120,7 +123,7 @@ impl DoiceApp {
             focus: self.taskbar.current_focus,
             changed_focus: false,
             crnt_i: i,
-            data: Arc::clone(&self.data),
+            data: Rc::clone(&self.data),
         }
     }
 

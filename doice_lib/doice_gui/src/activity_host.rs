@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{rc::Rc, sync::Arc};
 
 use eframe::egui;
 use instant::Duration;
@@ -11,7 +11,7 @@ use super::{
 /// Back again
 pub struct ActivityHost {
     act: Box<dyn Activity>,
-    data: Arc<AppData>,
+    data: Rc<AppData>,
     focused: bool,
 }
 
@@ -23,13 +23,13 @@ impl ActivityHost {
         act.init(ctx);
         ActivityHost {
             act,
-            data: Arc::new(AppData::new(cc)),
+            data: Rc::new(AppData::new(cc)),
             focused: false,
         }
     }
 
     fn context(&self) -> DCtx {
-        DCtx::new(Some(0), false, 0, Arc::clone(&self.data))
+        DCtx::new(Some(0), false, 0, Rc::clone(&self.data))
     }
 }
 
