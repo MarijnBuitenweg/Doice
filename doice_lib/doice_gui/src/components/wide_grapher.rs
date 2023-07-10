@@ -31,33 +31,29 @@ use super::{
 enum CurrentPanel {
     #[default]
     Plot,
-    History,
     Help,
-    Initiative,
 }
 
 impl CurrentPanel {
     pub fn cycle_left(&mut self) {
         *self = match *self {
             CurrentPanel::Plot => CurrentPanel::Plot,
-            CurrentPanel::History => CurrentPanel::Plot,
-            CurrentPanel::Help => CurrentPanel::History,
-            CurrentPanel::Initiative => CurrentPanel::Help,
+            CurrentPanel::Help => CurrentPanel::Plot,
         }
     }
 
     pub fn cycle_right(&mut self) {
         *self = match *self {
-            CurrentPanel::Plot => CurrentPanel::History,
-            CurrentPanel::History => CurrentPanel::Help,
-            CurrentPanel::Help => CurrentPanel::Initiative,
-            CurrentPanel::Initiative => CurrentPanel::Initiative,
+            CurrentPanel::Plot => CurrentPanel::Help,
+            CurrentPanel::Help => CurrentPanel::Help,
         }
     }
 }
 
+/// A dicegrapher optimized to use more screen real-estate.
+/// Does not include an initiative tracker.
 #[derive(Default)]
-pub struct DiceGrapher<const EXP_UPDATE: u64 = 100> {
+pub struct WideGrapher<const EXP_UPDATE: u64 = 100> {
     bars: Vec<Bar>,
     roll: Roll,
     roll_txt: String,
@@ -85,11 +81,9 @@ pub struct DiceGrapher<const EXP_UPDATE: u64 = 100> {
     exp_samples: SampleDist,
     exp_exec: ParExecutor<(Box<[isize]>, Roll)>,
     exp_run: bool,
-    // Initiative stuff
-    initiator: Initiator,
 }
 
-impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
+impl<const EXP_UPDATE: u64> WideGrapher<EXP_UPDATE> {
     pub fn new(ctx: Context) -> Self {
         let extra_ctx = ctx.clone();
         let exp_ctx = ctx.clone();
@@ -378,9 +372,7 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
 
         ui.horizontal(|ui| {
             ui.selectable_value(&mut self.current_panel, CurrentPanel::Plot, "Plot");
-            ui.selectable_value(&mut self.current_panel, CurrentPanel::History, "History");
             ui.selectable_value(&mut self.current_panel, CurrentPanel::Help, "Help");
-            ui.selectable_value(&mut self.current_panel, CurrentPanel::Initiative, "Innit");
 
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                 let prev_checked = self.dc_on;
@@ -394,56 +386,18 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
                 }
             })
         });
-
-        match self.current_panel {
-            CurrentPanel::Plot => self.show_chart(ui),
-            CurrentPanel::History => self.history.show(ui),
-            CurrentPanel::Help => dice_docs(ui),
-            CurrentPanel::Initiative => self.initiator.show(ui),
-        }
-    }
-
-    pub fn show_wide(&mut self, ui: &mut Ui) {
-        // Handle
-        self.handle_dist_gen();
-        self.handle_experiment();
-
-        if ui.input_mut().consume_key(Modifiers::NONE, Key::PageUp) {
-            self.current_panel = CurrentPanel::Plot;
-        }
-
-        if ui.input_mut().consume_key(Modifiers::NONE, Key::PageDown) {
-            self.current_panel = CurrentPanel::Help;
-        }
 
         ui.horizontal(|ui| {
-            ui.selectable_value(&mut self.current_panel, CurrentPanel::Plot, "Plot");
-            ui.selectable_value(&mut self.current_panel, CurrentPanel::Help, "Help");
-
-            ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                let prev_checked = self.dc_on;
-                ui.checkbox(&mut self.dc_on, "");
-                //let txt_response = ui.add(TextEdit::singleline(&mut self.dc_text).desired_width(20.0));
-                let val_response = ui.add(DragValue::new(&mut self.dc_val));
-                ui.label("DC:");
-
-                if self.dc_on && (!prev_checked || val_response.changed()) {
-                    self.refresh_dc();
-                }
-            })
+            match self.current_panel {
+                CurrentPanel::Plot => self.show_chart(ui),
+                CurrentPanel::Help => dice_docs(ui),
+            }
+            self.history.show(ui);
         });
-
-        match self.current_panel {
-            CurrentPanel::Plot => self.show_chart(ui),
-            CurrentPanel::Help => dice_docs(ui),
-            _ => {}
-        }
-
-        self.history.show(ui);
     }
 }
 
-impl Clone for DiceGrapher {
+impl Clone for WideGrapher {
     fn clone(&self) -> Self {
         // Thank god Context is cheap to clone
         let extra_ctx = self.ctx.clone();
@@ -476,8 +430,6 @@ impl Clone for DiceGrapher {
             exp_bars: self.exp_bars.clone(),
             exp_exec: ParExecutor::with_notifyer(move || exp_ctx.request_repaint()),
             exp_run: self.exp_run,
-            // initiative stuff
-            initiator: self.initiator.clone(),
         }
     }
 }

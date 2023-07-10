@@ -1,6 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use doice_lib::activities::*;
+use doice_lib::{activities::*, TailoredUI};
 
 use clap::Parser;
 
@@ -71,6 +71,25 @@ fn gui_main() {
     }
 }
 
+fn tailor_test_main() {
+    // Set options
+    let options = eframe::NativeOptions {
+        min_window_size: Some(egui::vec2(320.0, 100.0)),
+        transparent: true,
+        decorated: false,
+        fullscreen: true,
+        ..Default::default()
+    };
+
+    // Run app
+    eframe::run_native(
+        "Doice.",
+        options,
+        Box::new(|cc| Box::new(TailoredUI::new(cc))),
+    );
+}
+
 fn main() {
-    gui_main();
+    tailor_test_main();
+    //gui_main();
 }

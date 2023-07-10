@@ -14,6 +14,8 @@ mod notes;
 mod spell_browser;
 /// Starfury bombarder
 mod starfury;
+/// Global analyzer built to utilize more space and be good for DM-ing.
+mod wide_analyzer;
 
 pub use character_manager::CharacterManager;
 pub use dice_roller::DiceRoller;
@@ -25,3 +27,4 @@ pub use legacy_dice_roller::LegacyDiceRoller;
 pub use notes::Notes;
 pub use spell_browser::SpellBrowser;
 pub use starfury::StarfuryYeeter;
+pub use wide_analyzer::WideAnalyzer;

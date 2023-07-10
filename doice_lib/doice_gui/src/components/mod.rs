@@ -5,3 +5,4 @@ mod character_sheet;
 mod dice_docs;
 mod dice_history;
 mod initiator;
+mod wide_grapher;
