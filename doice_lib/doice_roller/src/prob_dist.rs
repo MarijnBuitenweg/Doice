@@ -456,7 +456,7 @@ impl Div<&Self> for ProbDist {
         };
 
         let mut out = BTreeMap::new();
-        for (outcome, prob) in shortest.iter() {
+        for (outcome, prob) in shortest.iter().filter(|(outcome, _)| **outcome != 0) {
             // For every entry in shortest, add a scaled version of longes to the output
             for (k, v) in longest.iter() {
                 out.entry(k / outcome)
