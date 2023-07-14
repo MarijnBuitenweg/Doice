@@ -76,8 +76,8 @@ fn tailor_test_main() {
     let options = eframe::NativeOptions {
         min_window_size: Some(egui::vec2(320.0, 100.0)),
         transparent: true,
-        decorated: false,
-        fullscreen: true,
+        decorated: true,
+        fullscreen: false,
         ..Default::default()
     };
 

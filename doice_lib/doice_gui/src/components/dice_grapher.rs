@@ -315,6 +315,82 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
         });
     }
 
+    fn show_chart_flex(&mut self, ui: &mut Ui) {
+        let chart = if !self.loading {
+            BarChart::new(self.bars.clone())
+                .color(Color32::LIGHT_BLUE)
+                .name("Probability Distribution")
+        } else {
+            BarChart::new(Vec::new())
+                .color(Color32::LIGHT_BLUE)
+                .name("Probability Distribution")
+        };
+
+        Plot::new("Roll Analyzer")
+            //.data_aspect(self.aspect_rat)
+            .auto_bounds_y()
+            .auto_bounds_x()
+            .show(ui, |ui| {
+                ui.bar_chart(chart);
+
+                if !self.exp_bars.is_empty() {
+                    ui.bar_chart(BarChart::new(self.exp_bars.clone()).name("Experimental results"));
+                }
+
+                // If there is a DC, show it
+                if self.dc_on {
+                    ui.vline(
+                        VLine::new(self.dc_val as f64)
+                            .name("DC")
+                            .color(Color32::DARK_GRAY)
+                            .width(2.5),
+                    );
+                }
+
+                // If there is a roll result, show it too
+                if let Some(res) = &self.res {
+                    let clr = if self.dc_on {
+                        if self.dc_val <= res.value {
+                            Color32::GREEN
+                        } else {
+                            Color32::RED
+                        }
+                    } else {
+                        Color32::GOLD
+                    };
+                    ui.vline(VLine::new(res.value as f64).name("Roll Result").color(clr));
+                }
+            });
+
+        ui.vertical_centered(|ui| {
+            if self.loading {
+                ui.spinner();
+            } else {
+                ui.label(match &self.display_error {
+                    // If there was an error during parsing, display that
+                    Some(err) => RichText::new(err).color(Color32::RED),
+                    // Otherwise show info about the roll
+                    None => RichText::new({
+                        let mut info_text = format!(
+                            "average = {:.3};\tdeviation = {:.3}",
+                            self.avg,
+                            self.variance.sqrt()
+                        );
+
+                        if self.dc_on {
+                            write!(info_text, ";\tsuccess = {:.2}%", self.success_chance).unwrap();
+                        }
+
+                        info_text
+                    }),
+                });
+            }
+            // if let Some(res) = &self.res {
+            //     ui.label(LayoutJob::from(res.txt.clone()));
+            // }
+        });
+    }
+
     fn handle_dist_gen(&mut self) {
         // If new dist is available
         if let Some(dist) = self.dist_gen.try_get_data() {
@@ -434,12 +510,28 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
         });
 
         match self.current_panel {
-            CurrentPanel::Plot => self.show_chart(ui),
+            CurrentPanel::Plot => self.show_chart_flex(ui),
             CurrentPanel::Help => dice_docs(ui),
             _ => {}
         }
 
-        self.history.show(ui);
+        // self.history.show(ui);
+    }
+
+    pub fn initiator(&self) -> &Initiator {
+        &self.initiator
+    }
+
+    pub fn initiator_mut(&mut self) -> &mut Initiator {
+        &mut self.initiator
+    }
+
+    pub fn history(&self) -> &DiceHistory {
+        &self.history
+    }
+
+    pub fn history_mut(&mut self) -> &mut DiceHistory {
+        &mut self.history
     }
 }
 
