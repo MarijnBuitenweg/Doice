@@ -4,7 +4,7 @@ use doice_gui::{
     eframe::{App, CreationContext},
     Activity, AppData, DCtx,
 };
-use egui::{panel::TopBottomSide, Color32, Frame, Id, Layout, Sense, Ui, Vec2};
+use egui::{panel::TopBottomSide, Color32, Frame, Id, Layout, Pos2, Sense, Ui, Vec2};
 use egui_extras::StripBuilder;
 
 use crate::activities::{CharacterManager, GlobalAnalyzer, Notes, WideAnalyzer};
@@ -47,6 +47,11 @@ impl App for TailoredUI {
             if mainbar.drag_started() {
                 frame.drag_window()
             }
+            if mainbar.double_clicked() {
+                frame.set_window_pos(Pos2::new(0.0, 0.0));
+                let monitor = frame.info().window_info.monitor_size.unwrap();
+                frame.set_window_size(Vec2::from((monitor.x / 2.0, monitor.y)));
+            }
 
             egui::menu::bar(ui, |ui| {
                 ui.menu_button("Doice.", |ui| ui.small_button("Quartered"));
@@ -71,6 +76,7 @@ impl App for TailoredUI {
             let quarter: Vec2 = (size.x / 2.0 - group_margin, size.y / 2.0 - group_margin).into();
             let mut context = self.context(0);
 
+            // Top half of the window
             ui.horizontal_top(|ui| {
                 // Quarter 1: Dice roller, grapher, and docs
                 ui.group(|ui| {
@@ -93,6 +99,24 @@ impl App for TailoredUI {
                             .show_flex(ui)
                     })
                 });
+            });
+
+            // Bottom half of the window
+            ui.horizontal_top(|ui| {
+                // Quarter 3: Initiative Tracker
+                ui.group(|ui| {
+                    ui.set_max_size(quarter);
+                    ui.set_min_size(quarter);
+                    ui.vertical(|ui| {
+                        context
+                            .data()
+                            .dice_grapher
+                            .write()
+                            .unwrap()
+                            .initiator_mut()
+                            .show(ui)
+                    })
+                })
             });
         });
     }

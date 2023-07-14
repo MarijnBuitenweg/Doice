@@ -1,8 +1,13 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use doice_lib::{activities::*, TailoredUI};
+use doice_lib::{
+    activities::{eframe::IconData, *},
+    TailoredUI,
+};
 
 use clap::Parser;
+
+const LOGO: &[u8] = include_bytes!("../../../design/Logo.png");
 
 #[derive(Parser)]
 #[command(name = "Doice")]
@@ -52,6 +57,7 @@ fn gui_analyzer_only() {
         maximized: false,
         resizable: false,
         initial_window_size: Some(egui::vec2(600.0, 670.0)),
+        icon_data: Some(IconData::try_from_png_bytes(LOGO).unwrap()),
         ..Default::default()
     };
 
@@ -75,6 +81,7 @@ fn tailor_test_main() -> eframe::Result<()> {
     // Set options
     let options = eframe::NativeOptions {
         min_window_size: Some(egui::vec2(320.0, 100.0)),
+        icon_data: Some(IconData::try_from_png_bytes(LOGO).unwrap()),
         transparent: true,
         decorated: false,
         fullscreen: false,
