@@ -114,9 +114,18 @@ impl App for TailoredUI {
                             .write()
                             .unwrap()
                             .initiator_mut()
-                            .show(ui)
+                            .show_flex(ui)
                     })
-                })
+                });
+
+                // Quarter 4: Statblock viewer
+                ui.group(|ui| {
+                    ui.set_max_size(quarter);
+                    ui.set_min_size(quarter);
+                    ui.vertical(|ui| {
+                        self.manager.update(ui, &mut context);
+                    })
+                });
             });
         });
     }

@@ -1,5 +1,5 @@
 use eframe::{
-    egui::{self, DragValue, Id, Key, Layout, Ui},
+    egui::{self, collapsing_header::CollapsingState, DragValue, Id, Key, Layout, TextEdit, Ui},
     emath::Align,
 };
 use egui_dnd::{utils::shift_vec, DragDropItem, DragDropUi};
@@ -16,18 +16,44 @@ struct Item {
 impl Item {
     pub fn show(&mut self, ui: &mut Ui) {
         ui.group(|ui| {
-            ui.horizontal_wrapped(|ui| {
-                ui.add(DragValue::new(&mut self.initiative));
-                if ui.small_button("-").clicked() {
-                    self.remove = true;
-                }
-                ui.label(&self.name);
+            ui.vertical(|ui| {
+                ui.horizontal_wrapped(|ui| {
+                    ui.add(DragValue::new(&mut self.initiative));
+                    if ui.small_button("-").clicked() {
+                        self.remove = true;
+                    }
+                    ui.label(&self.name);
+                    ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                        ui.small_button(">")
+                    });
 
-                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                    ui.text_edit_singleline(&mut self.note);
-                    ui.label("note: ");
+                    // ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    //     if !self.expandero {
+                    //         if ui.small_button("\\/").clicked() {
+                    //             self.expandero = true;
+                    //         }
+                    //     } else if ui.small_button("/\\").clicked() {
+                    //         self.expandero = false;
+                    //     }
+                    //     // let id = ui.auto_id_with(self.id);
+                    //     // CollapsingState::load_with_default_open(ui.ctx(), id, false)
+                    //     //     .show_header(ui, |ui| ui.label(""))
+                    //     //     .body_unindented(|ui| {
+                    //     //         ui.with_layout(Layout::top_down(Align::Min), |ui| {
+                    //     //             ui.label("");
+                    //     //             ui.group(|ui| {
+                    //     //                 ui.label("Uno");
+                    //     //                 ui.label("Duo");
+                    //     //             })
+                    //     //         })
+                    //     //     });
+                    // });
                 });
-            })
+                // if self.expandero {
+                //     ui.separator();
+                //     ui.label("NOTEN");
+                // }
+            });
         });
     }
 
@@ -48,6 +74,7 @@ impl DragDropItem for Item {
 #[derive(Default, Clone)]
 pub struct Initiator {
     pre_item: Item,
+    innit_text: String,
     list: Vec<Item>,
     dnd: DragDropUi,
     current: Option<isize>,
@@ -59,28 +86,38 @@ impl Initiator {
         Self::default()
     }
 
-    pub fn show(&mut self, ui: &mut Ui) {
+    pub fn show_flex(&mut self, ui: &mut Ui) {
         // Entry adder
         ui.group(|ui| {
             ui.horizontal(|ui| {
                 if ui.small_button("+").clicked() {
                     self.list.push(self.pre_item.clone());
                     self.pre_item.id += 1;
+                    self.innit_text.clear();
                     self.pre_item.reset();
                 }
 
-                let innit = ui.add(DragValue::new(&mut self.pre_item.initiative));
+                if !self.innit_text.is_empty() {
+                    self.innit_text = self.pre_item.initiative.to_string();
+                }
+                let innit = ui.add(
+                    TextEdit::singleline(&mut self.innit_text)
+                        .char_limit(3)
+                        .desired_width(20.0),
+                );
+                if let Ok(num) = self.innit_text.trim().parse() {
+                    self.pre_item.initiative = num;
+                }
                 ui.label("name: ");
                 let name = ui.text_edit_singleline(&mut self.pre_item.name);
-                ui.label("note: ");
-                let note = ui.text_edit_singleline(&mut self.pre_item.note);
 
-                if (innit.lost_focus() || name.lost_focus() || note.lost_focus())
+                if (innit.lost_focus() || name.lost_focus())
                     && ui.input(|i| i.key_pressed(Key::Enter))
                 {
                     self.list.push(self.pre_item.clone());
                     self.pre_item.id += 1;
                     self.pre_item.reset();
+                    self.innit_text.clear();
                     innit.request_focus();
                 }
 
@@ -152,7 +189,7 @@ impl Initiator {
         self.list.retain(|e| !e.remove);
     }
 
-    pub fn show_flex(&mut self, ui: &mut Ui) {
+    pub fn show(&mut self, ui: &mut Ui) {
         // Entry adder
         ui.group(|ui| {
             ui.horizontal(|ui| {
