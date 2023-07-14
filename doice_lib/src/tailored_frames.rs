@@ -39,7 +39,8 @@ impl App for TailoredUI {
         let mut dctx = self.context(0);
         egui::TopBottomPanel::new(TopBottomSide::Top, "MAINBAR").show(ctx, |ui| {
             egui::menu::bar(ui, |ui| {
-                ui.label("Doice.");
+                ui.menu_button("Doice.", |ui| ui.small_button("Quartered"));
+
                 ui.with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
                     let exit_button = egui::widgets::Button::new("Exit").fill(Color32::DARK_RED);
                     if ui.add(exit_button).clicked() {
@@ -48,6 +49,7 @@ impl App for TailoredUI {
                 })
             })
         });
+
         egui::CentralPanel::default()
             .show(ctx, |ui| ui.group(|ui| self.roller.update(ui, &mut dctx)));
     }

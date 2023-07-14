@@ -17,8 +17,7 @@ impl Activity for DiceRoller {
     fn update(&mut self, ui: &mut egui::Ui, _ctx: &mut DCtx) {
         // Runs experiment if user holds down CTRL+SHIFT
         let do_run = ui
-            .input()
-            .modifiers
+            .input(|i| i.modifiers)
             .matches(Modifiers::CTRL | Modifiers::SHIFT);
         self.plotter.run_experiment(do_run);
 
@@ -33,13 +32,13 @@ impl Activity for DiceRoller {
         self.prev_input = self.text_in.clone();
 
         // Roll on confirm
-        if field.lost_focus() && ui.input().key_pressed(Key::Enter) {
+        if field.lost_focus() && ui.input(|i| i.key_pressed(Key::Enter)) {
             self.plotter.roll();
             field.request_focus();
         }
 
         // Focus dice field on press of Home
-        if !field.has_focus() && ui.input().key_pressed(Key::Home) {
+        if !field.has_focus() && ui.input(|i| i.key_pressed(Key::Home)) {
             field.request_focus();
         }
 

@@ -14,8 +14,7 @@ impl Activity for WideAnalyzer {
 
         // Runs experiment if user holds down CTRL+SHIFT
         let do_run = ui
-            .input()
-            .modifiers
+            .input(|i| i.modifiers)
             .matches(Modifiers::CTRL | Modifiers::SHIFT);
         plotter.run_experiment(do_run);
 
@@ -30,13 +29,13 @@ impl Activity for WideAnalyzer {
         self.prev_input = self.text_in.clone();
 
         // Roll on confirm
-        if field.lost_focus() && ui.input().key_pressed(Key::Enter) {
+        if field.lost_focus() && ui.input(|i| i.key_pressed(Key::Enter)) {
             plotter.roll();
             field.request_focus();
         }
 
         // Focus dice field on press of Home
-        if !field.has_focus() && ui.input().key_pressed(Key::Home) {
+        if !field.has_focus() && ui.input(|i| i.key_pressed(Key::Home)) {
             field.request_focus();
         }
 

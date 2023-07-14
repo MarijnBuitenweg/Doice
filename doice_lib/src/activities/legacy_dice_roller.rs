@@ -54,7 +54,7 @@ impl Activity for LegacyDiceRoller {
 
             let command_confirm = ui.text_edit_singleline(&mut self.crnt_command);
             // If focus is lost and enter was just pressed, the user confirmed input
-            if command_confirm.lost_focus() && ui.input().key_pressed(Key::Enter) {
+            if command_confirm.lost_focus() && ui.input(|i| i.key_pressed(Key::Enter)) {
                 // Reset the history pointer
                 self.history_i = 0;
                 // Set focus to the command bar again, so the user can immediately continue typing
@@ -90,7 +90,7 @@ impl Activity for LegacyDiceRoller {
             }
 
             if command_confirm.has_focus() {
-                if ui.input().key_pressed(Key::ArrowUp) {
+                if ui.input(|i| i.key_pressed(Key::ArrowUp)) {
                     let i = self.roll_history.len() - 1 - self.history_i;
                     self.crnt_command = self.roll_history[i].roll_txt.clone();
 
@@ -101,7 +101,7 @@ impl Activity for LegacyDiceRoller {
                     }
                 }
 
-                if ui.input().key_pressed(Key::ArrowDown) {
+                if ui.input(|i| i.key_pressed(Key::ArrowDown)) {
                     //println!("DEC: i: {}, len: {}", self.history_i, self.roll_history.len());
                     let i = self.roll_history.len() - 1 - self.history_i;
                     self.crnt_command = self.roll_history[i].roll_txt.clone();

@@ -15,5 +15,6 @@ wasm_comp = ["doice_legacy/wasm_comp", "doice_gui/wasm_comp", "doice_utils/wasm_
 doice_gui = { version = "0.1.0", path = "doice_gui" }
 doice_legacy = { version = "0.1.0", path = "doice_legacy" }
 doice_utils = { version = "0.1.0", path = "doice_utils" }
-egui = "0.20.1"
+egui = "0.22.0"
+egui_extras = "0.22.0"
 rand = { version = "0.8.5", features = ["nightly"] }

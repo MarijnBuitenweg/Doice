@@ -217,11 +217,11 @@ impl eframe::App for DoiceApp {
         egui::Vec2::INFINITY
     }
 
-    fn clear_color(&self, _visuals: &egui::Visuals) -> egui::Rgba {
+    fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
         // NOTE: a bright gray makes the shadows of the windows look weird.
         // We use a bit of transparency so that if the user switches on the
         // `transparent()` option they get immediate results.
-        egui::Color32::from_rgba_unmultiplied(12, 12, 12, 180).into()
+        egui::Color32::from_rgba_unmultiplied(12, 12, 12, 180).to_normalized_gamma_f32()
 
         // _visuals.window_fill() would also be a natural choice
     }
@@ -459,7 +459,7 @@ impl Taskbar {
     /// Helper function that displays the search bar and performs the search
     fn display_search_window(&mut self, ui: &mut Ui) {
         // If tab is pressed
-        if !self.open_activities.is_empty() && ui.input().key_pressed(egui::Key::Tab) {
+        if !self.open_activities.is_empty() && ui.input(|i| i.key_pressed(egui::Key::Tab)) {
             // Exit search mode
             self.search_mode = false;
             // Switch to other activity
@@ -490,7 +490,7 @@ impl Taskbar {
         self.display_search_res(ui);
 
         // If user has confirmed
-        if ui.input().key_pressed(egui::Key::Enter) {
+        if ui.input(|i| i.key_pressed(egui::Key::Enter)) {
             self.start_activity(self.search_res[0].1, ui)
                 .expect("Search result out of bounds!");
             self.search_mode = false;
@@ -503,9 +503,7 @@ impl Taskbar {
         // Handle ctrl+w shortcut
         if self.current_focus.is_some()
             && !self.open_activities.is_empty()
-            && ui
-                .input_mut()
-                .consume_key(egui::Modifiers::CTRL, egui::Key::W)
+            && ui.input_mut(|i| i.consume_key(egui::Modifiers::CTRL, egui::Key::W))
         {
             let i = self.current_focus.unwrap();
             //println!("Focus: {}", i);
@@ -516,7 +514,7 @@ impl Taskbar {
 
         ui.set_height(15.0);
         egui::menu::bar(ui, |ui| {
-            let crnt_alt = ui.input().modifiers.alt;
+            let crnt_alt = ui.input(|i| i.modifiers.alt);
 
             // Button that allows user to access the list of available activities
             let _main_but = ui.menu_button("Doice.", |ui| {

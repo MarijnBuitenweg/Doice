@@ -1,5 +1,5 @@
 use eframe::{
-    egui::{DragValue, Id, Key, Layout, Ui},
+    egui::{self, DragValue, Id, Key, Layout, Ui},
     emath::Align,
 };
 use egui_dnd::{utils::shift_vec, DragDropItem, DragDropUi};
@@ -76,7 +76,7 @@ impl Initiator {
                 let note = ui.text_edit_singleline(&mut self.pre_item.note);
 
                 if (innit.lost_focus() || name.lost_focus() || note.lost_focus())
-                    && ui.input().key_pressed(Key::Enter)
+                    && ui.input(|i| i.key_pressed(Key::Enter))
                 {
                     self.list.push(self.pre_item.clone());
                     self.pre_item.id += 1;

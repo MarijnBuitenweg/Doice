@@ -368,11 +368,11 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
         self.handle_dist_gen();
         self.handle_experiment();
 
-        if ui.input_mut().consume_key(Modifiers::NONE, Key::PageUp) {
+        if ui.input_mut(|i| i.consume_key(Modifiers::NONE, Key::PageUp)) {
             self.current_panel.cycle_left();
         }
 
-        if ui.input_mut().consume_key(Modifiers::NONE, Key::PageDown) {
+        if ui.input_mut(|i| i.consume_key(Modifiers::NONE, Key::PageDown)) {
             self.current_panel.cycle_right();
         }
 
@@ -408,11 +408,11 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
         self.handle_dist_gen();
         self.handle_experiment();
 
-        if ui.input_mut().consume_key(Modifiers::NONE, Key::PageUp) {
+        if ui.input_mut(|i| i.consume_key(Modifiers::NONE, Key::PageUp)) {
             self.current_panel = CurrentPanel::Plot;
         }
 
-        if ui.input_mut().consume_key(Modifiers::NONE, Key::PageDown) {
+        if ui.input_mut(|i| i.consume_key(Modifiers::NONE, Key::PageDown)) {
             self.current_panel = CurrentPanel::Help;
         }
 
