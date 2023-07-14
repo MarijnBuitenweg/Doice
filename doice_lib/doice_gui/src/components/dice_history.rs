@@ -55,6 +55,44 @@ impl DiceHistory {
             );
         });
     }
+
+    pub fn show_flex(&mut self, ui: &mut Ui) {
+        ui.with_layout(Layout::bottom_up(Align::Center), |ui| {
+            let luck: f64 = if self.entries.is_empty() {
+                0.0f64
+            } else {
+                let weight = 1.0f64 / (self.entries.len() as f64);
+                self.entries
+                    .iter()
+                    .map(|entry| entry.luck() * weight)
+                    .filter(|w_luck| w_luck.is_normal())
+                    .sum()
+            };
+
+            ui.colored_label(
+                match luck.total_cmp(&0.0f64) {
+                    std::cmp::Ordering::Less => Color32::RED,
+                    std::cmp::Ordering::Equal => Color32::GRAY,
+                    std::cmp::Ordering::Greater => Color32::GREEN,
+                },
+                format!("Session Luck: {:.3}", luck),
+            );
+
+            ui.group(|ui| {
+                ui.vertical(|ui| {
+                    let row_height = ui.text_style_height(&TextStyle::Body) * 2.1;
+                    ScrollArea::vertical()
+                        .stick_to_bottom(true)
+                        .auto_shrink([false; 2])
+                        .show_rows(ui, row_height, self.entries.len(), |ui, rows| {
+                            for entry in self.entries[rows].iter_mut() {
+                                ui.group(|ui| entry.show(ui));
+                            }
+                        });
+                });
+            });
+        });
+    }
 }
 
 #[derive(Clone)]

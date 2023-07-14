@@ -71,12 +71,12 @@ fn gui_main() {
     }
 }
 
-fn tailor_test_main() {
+fn tailor_test_main() -> eframe::Result<()> {
     // Set options
     let options = eframe::NativeOptions {
         min_window_size: Some(egui::vec2(320.0, 100.0)),
         transparent: true,
-        decorated: true,
+        decorated: false,
         fullscreen: false,
         ..Default::default()
     };
@@ -86,10 +86,10 @@ fn tailor_test_main() {
         "Doice.",
         options,
         Box::new(|cc| Box::new(TailoredUI::new(cc))),
-    );
+    )
 }
 
-fn main() {
-    tailor_test_main();
+fn main() -> eframe::Result<()> {
+    tailor_test_main()
     //gui_main();
 }

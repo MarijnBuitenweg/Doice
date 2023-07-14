@@ -326,43 +326,10 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
                 .name("Probability Distribution")
         };
 
-        Plot::new("Roll Analyzer")
-            //.data_aspect(self.aspect_rat)
-            .auto_bounds_y()
-            .auto_bounds_x()
-            .show(ui, |ui| {
-                ui.bar_chart(chart);
-
-                if !self.exp_bars.is_empty() {
-                    ui.bar_chart(BarChart::new(self.exp_bars.clone()).name("Experimental results"));
-                }
-
-                // If there is a DC, show it
-                if self.dc_on {
-                    ui.vline(
-                        VLine::new(self.dc_val as f64)
-                            .name("DC")
-                            .color(Color32::DARK_GRAY)
-                            .width(2.5),
-                    );
-                }
-
-                // If there is a roll result, show it too
-                if let Some(res) = &self.res {
-                    let clr = if self.dc_on {
-                        if self.dc_val <= res.value {
-                            Color32::GREEN
-                        } else {
-                            Color32::RED
-                        }
-                    } else {
-                        Color32::GOLD
-                    };
-                    ui.vline(VLine::new(res.value as f64).name("Roll Result").color(clr));
-                }
-            });
-
-        ui.vertical_centered(|ui| {
+        ui.with_layout(Layout::bottom_up(Align::Center), |ui| {
+            // if let Some(res) = &self.res {
+            //     ui.label(LayoutJob::from(res.txt.clone()));
+            // }
             if self.loading {
                 ui.spinner();
             } else {
@@ -385,9 +352,44 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
                     }),
                 });
             }
-            // if let Some(res) = &self.res {
-            //     ui.label(LayoutJob::from(res.txt.clone()));
-            // }
+
+            Plot::new("Roll Analyzer")
+                //.data_aspect(self.aspect_rat)
+                .auto_bounds_y()
+                .auto_bounds_x()
+                .show(ui, |ui| {
+                    ui.bar_chart(chart);
+
+                    if !self.exp_bars.is_empty() {
+                        ui.bar_chart(
+                            BarChart::new(self.exp_bars.clone()).name("Experimental results"),
+                        );
+                    }
+
+                    // If there is a DC, show it
+                    if self.dc_on {
+                        ui.vline(
+                            VLine::new(self.dc_val as f64)
+                                .name("DC")
+                                .color(Color32::DARK_GRAY)
+                                .width(2.5),
+                        );
+                    }
+
+                    // If there is a roll result, show it too
+                    if let Some(res) = &self.res {
+                        let clr = if self.dc_on {
+                            if self.dc_val <= res.value {
+                                Color32::GREEN
+                            } else {
+                                Color32::RED
+                            }
+                        } else {
+                            Color32::GOLD
+                        };
+                        ui.vline(VLine::new(res.value as f64).name("Roll Result").color(clr));
+                    }
+                });
         });
     }
 

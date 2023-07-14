@@ -4,7 +4,7 @@ use doice_gui::{
     eframe::{App, CreationContext},
     Activity, AppData, DCtx,
 };
-use egui::{panel::TopBottomSide, Color32, Frame, Layout, Ui, Vec2};
+use egui::{panel::TopBottomSide, Color32, Frame, Id, Layout, Sense, Ui, Vec2};
 use egui_extras::StripBuilder;
 
 use crate::activities::{CharacterManager, GlobalAnalyzer, Notes, WideAnalyzer};
@@ -39,13 +39,27 @@ impl App for TailoredUI {
     fn update(&mut self, ctx: &egui::Context, frame: &mut doice_gui::eframe::Frame) {
         let mut dctx = self.context(0);
         egui::TopBottomPanel::new(TopBottomSide::Top, "MAINBAR").show(ctx, |ui| {
+            let mainbar = ui.interact(
+                ui.clip_rect(),
+                Id::from("MAINBARRECT"),
+                Sense::click_and_drag(),
+            );
+            if mainbar.drag_started() {
+                frame.drag_window()
+            }
+
             egui::menu::bar(ui, |ui| {
                 ui.menu_button("Doice.", |ui| ui.small_button("Quartered"));
 
                 ui.with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
+                    let minimize_button = egui::widgets::Button::new("—").fill(Color32::DARK_GRAY);
                     let exit_button = egui::widgets::Button::new("Exit").fill(Color32::DARK_RED);
+
                     if ui.add(exit_button).clicked() {
                         frame.close()
+                    }
+                    if ui.add(minimize_button).clicked() {
+                        frame.set_minimized(true);
                     }
                 })
             })
@@ -56,18 +70,19 @@ impl App for TailoredUI {
             let group_margin = Frame::group(ui.style()).inner_margin.top * 2.0;
             let quarter: Vec2 = (size.x / 2.0 - group_margin, size.y / 2.0 - group_margin).into();
             let mut context = self.context(0);
-            dbg!(group_margin);
 
             ui.horizontal_top(|ui| {
                 // Quarter 1: Dice roller, grapher, and docs
                 ui.group(|ui| {
                     ui.set_max_size(quarter);
+                    ui.set_min_size(quarter);
                     ui.vertical(|ui| self.roller.update(ui, &mut context))
                 });
 
                 // Quarter 2: Dice history
                 ui.group(|ui| {
                     ui.set_max_size(quarter);
+                    ui.set_min_size(quarter);
                     ui.vertical(|ui| {
                         context
                             .data()
@@ -75,7 +90,7 @@ impl App for TailoredUI {
                             .write()
                             .unwrap()
                             .history_mut()
-                            .show(ui)
+                            .show_flex(ui)
                     })
                 });
             });
