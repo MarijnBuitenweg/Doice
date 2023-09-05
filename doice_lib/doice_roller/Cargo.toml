@@ -15,5 +15,5 @@ egui = "0.22.0"
 getrandom = "0.2.7"
 instant = "0.1.12"
 itertools = "0.10.3"
-rand = { version = "0.8.5", features = ["nightly", "simd_support"] }
+rand = { version = "0.8.5", features = ["nightly"] }
 rayon = { version = "1.5.3", optional = true }

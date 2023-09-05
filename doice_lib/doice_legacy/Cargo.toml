@@ -10,4 +10,4 @@ wasm_comp = ["getrandom/js"]
 
 [dependencies]
 getrandom = "0.2.7"
-rand = { version = "0.8.5", features = ["nightly", "simd_support"] }
+rand = { version = "0.8.5", features = ["nightly"] }
