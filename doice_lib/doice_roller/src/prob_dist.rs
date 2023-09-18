@@ -5,11 +5,12 @@ use std::{
 };
 
 use instant::Instant;
+use rand::random;
 
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;
 
-use crate::{DiceError, Value};
+use crate::{DiceError, RollOut, Value};
 
 use super::{Roll, Rollable, SampleDist};
 
@@ -19,14 +20,42 @@ const TIMEOUT_CHECK_INTERVAL: usize = 20_000; //[iterations]
 const CLT_THRESHOLD: usize = 1000; // [terms]
 
 /// Type representing a valid probability mass function
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ProbDist(BTreeMap<Value, f64>);
+
+impl Rollable for ProbDist {
+    fn roll(&self) -> RollOut {
+        let roll: usize = random();
+        let mut roll: f64 = roll as f64 / usize::MAX as f64;
+        let mut final_outcome = 0;
+        for (outcome, prob) in self.iter() {
+            roll -= prob;
+            final_outcome = *outcome;
+            if roll < 0.0 {
+                break;
+            }
+        }
+
+        RollOut {
+            value: final_outcome,
+            txt: final_outcome.to_string().into(),
+        }
+    }
+
+    fn dist(&self) -> ProbDist {
+        self.clone()
+    }
+}
 
 impl ProbDist {
     /// Same as default()
     #[must_use]
     pub fn new() -> Self {
         ProbDist::default()
+    }
+
+    pub fn inner(self) -> BTreeMap<isize, f64> {
+        self.0
     }
 
     /// Generates a normal distribution for the given range of outcomes

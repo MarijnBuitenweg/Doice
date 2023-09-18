@@ -128,6 +128,14 @@ impl From<&str> for Layouter {
     }
 }
 
+impl From<String> for Layouter {
+    fn from(value: String) -> Self {
+        Layouter {
+            sections: vec![(value, TextFormat::default())]
+        }
+    }
+}
+
 impl From<Layouter> for LayoutJob {
     fn from(val: Layouter) -> Self {
         let mut out = LayoutJob::default();

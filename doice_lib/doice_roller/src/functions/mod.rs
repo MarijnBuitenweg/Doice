@@ -13,6 +13,7 @@ mod mirror;
 mod stat_roll;
 mod sum;
 mod unit_dick;
+mod poisson;
 
 pub trait FunctionInit: Rollable {
     const DOC: &'static str;
@@ -35,6 +36,7 @@ const FUNCTION_GENERATORS: &[(&str, FunctionGenerator)] = &[
     ("bet", betting_magic::BettingMagic::generate),
     ("bet2", betting_magic::BettingMagic2::generate),
     ("bet3", betting_magic::BettingMagic3::generate),
+    ("poisson", poisson::Poisson::generate),
 ];
 
 pub const FUNCTION_DOCS: &[(&str, &str)] = &[
@@ -47,6 +49,7 @@ pub const FUNCTION_DOCS: &[(&str, &str)] = &[
     ("Attack", attack::Attack::DOC),
     ("Mirror", mirror::Mirror::DOC),
     ("Bernoulli / Coin toss", bernoulli::Bernoulli::DOC),
+    ("Poisson", poisson::Poisson::DOC),
     ("Add nonzero", add_nonzero::AddNonZero::DOC),
 ];
 
