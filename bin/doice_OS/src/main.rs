@@ -6,6 +6,7 @@ use doice_lib::{
 };
 
 use clap::Parser;
+use doice_lib::activity_host::ActivityHost;
 
 const LOGO: &[u8] = include_bytes!("../../../design/Logo.png");
 

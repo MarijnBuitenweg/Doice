@@ -4,9 +4,6 @@
 // Allows
 #![allow(dead_code)]
 
-/// A rudimentary application window that can run an activity
-#[cfg(feature = "eframe")]
-mod activity_host;
 /// The main application UI for doiceOS, DEPRECATED
 mod application;
 /// Some ui components
@@ -16,7 +13,6 @@ mod show_trait;
 // The only things that need to be accessed from the outside
 /// Basic application that can run a single activity
 #[cfg(feature = "eframe")]
-pub use activity_host::ActivityHost;
 pub use application::Activity;
 pub use application::AppData;
 pub use application::DCtx;

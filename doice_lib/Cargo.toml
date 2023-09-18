@@ -18,3 +18,4 @@ doice_utils = { version = "0.1.0", path = "doice_utils" }
 egui = "0.22.0"
 egui_extras = "0.22.0"
 rand = { version = "0.8.5", features = ["nightly"] }
+instant = "0.1.12"

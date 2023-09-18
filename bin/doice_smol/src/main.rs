@@ -1,7 +1,13 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use clap::Parser;
+use eframe::NativeOptions;
 use doice_lib::activities::*;
+use doice_lib::activities::eframe::IconData;
+use doice_lib::activities::egui::vec2;
+use doice_lib::activity_host::ActivityHost;
+
+const LOGO: &[u8] = include_bytes!("../../../design/TransparentLogo.png");
 
 #[derive(Parser)]
 #[command(name = "Doice")]
@@ -14,13 +20,13 @@ fn main() {
     let _cli = Cli::parse();
 
     // Set options
-    let options = eframe::NativeOptions {
-        min_window_size: Some(egui::vec2(320.0, 100.0)),
-        transparent: false,
-        decorated: true,
-        maximized: false,
-        resizable: false,
-        initial_window_size: Some(egui::vec2(600.0, 670.0)),
+    let options = NativeOptions {
+        min_window_size: Some(vec2(320.0, 400.0)),
+        icon_data: Some(IconData::try_from_png_bytes(LOGO).unwrap()),
+        transparent: true,
+        decorated: false,
+        fullscreen: false,
+        initial_window_size: Some(vec2(420.0, 500.0)),
         ..Default::default()
     };
 
@@ -28,5 +34,5 @@ fn main() {
         "Doice Analyzer",
         options,
         Box::new(|cc| Box::new(ActivityHost::new::<DiceRoller>(cc))),
-    );
+    ).expect("Application errored out.");
 }

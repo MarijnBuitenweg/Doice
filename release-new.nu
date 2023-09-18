@@ -1,5 +1,6 @@
 # Build all
-cargo build --workspace --release
+cargo build -p doice_os --release
+cargo build -p doice_smol --release
 # Get Doice version
 let doice_ver = (open cargo.toml | get package.version)
 # Move files to proper place, and rename them
