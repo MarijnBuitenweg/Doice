@@ -7,7 +7,7 @@ use doice_lib::activities::eframe::IconData;
 use doice_lib::activities::egui::vec2;
 use doice_lib::activity_host::ActivityHost;
 
-const LOGO: &[u8] = include_bytes!("../../../design/TransparentLogo.png");
+const LOGO: &[u8] = include_bytes!("../../../design/Logo2.png");
 
 #[derive(Parser)]
 #[command(name = "Doice")]
@@ -27,6 +27,7 @@ fn main() {
         decorated: false,
         fullscreen: false,
         initial_window_size: Some(vec2(420.0, 500.0)),
+
         ..Default::default()
     };
 
