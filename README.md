@@ -7,6 +7,7 @@
 
 **DoiceOS:**
 - Now deprecated
+
 **Doice_Smol:**
 - Will be distributed as "Doice" in the next release
 - Added custom taskbar
