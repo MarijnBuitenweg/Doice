@@ -5,10 +5,10 @@
 
 ### Version 2.5
 
-**DoiceOS:**
+##### DoiceOS:
 - Now deprecated
 
-**Doice_Smol:**
+##### Doice_Smol:
 - Will be distributed as "Doice" in the next release
 - Added custom taskbar
 - Added process and executable icon
