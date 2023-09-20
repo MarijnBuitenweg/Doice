@@ -1,5 +1,11 @@
 # Doice: a probability calculator with extra jank.
-
+## Plans for future releases
+- Improve the capabilities of the calculator
+- Improve error messages
+- Polish UI
+- Further improve performance
+- Autocompletion
+- Obsidian plugin
 
 ## Changelogs
 
