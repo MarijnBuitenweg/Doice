@@ -1,11 +1,11 @@
-# Doice: a probability calculator with extra jank.
+# Doice: a dice-rolling program that got slightly out of hand.
 
 ## Plans for future releases
 
 - Improve the capabilities of the calculator
 - Improve error messages
 - Polish UI
-- Further improve performance
+- Improve performance
 - Autocompletion
 - Obsidian plugin
 
@@ -43,5 +43,5 @@
 
 - Cleaner CLI
 - Improved initiative tracker
-- Fixed diceroll history (Source of diceroll is being shown again)
-- Reduced size executables (no one was using the dnd data anyways)
+- Fixed dice roll history (Source of dice roll is being shown again)
+- Reduced executable size (no one was using the dnd data anyway)
