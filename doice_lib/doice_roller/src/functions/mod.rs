@@ -14,6 +14,8 @@ mod stat_roll;
 mod sum;
 mod unit_dick;
 mod poisson;
+mod outcomes;
+mod blackjack;
 
 pub trait FunctionInit: Rollable {
     const DOC: &'static str;
@@ -22,6 +24,7 @@ pub trait FunctionInit: Rollable {
 }
 
 type FunctionGenerator = fn(&str) -> Result<Expression, DiceError>;
+
 const FUNCTION_GENERATORS: &[(&str, FunctionGenerator)] = &[
     ("emp", empower::Empower::generate),
     ("stat", stat_roll::StatRoller::generate),
@@ -37,6 +40,8 @@ const FUNCTION_GENERATORS: &[(&str, FunctionGenerator)] = &[
     ("bet2", betting_magic::BettingMagic2::generate),
     ("bet3", betting_magic::BettingMagic3::generate),
     ("poisson", poisson::Poisson::generate),
+    ("outcomes", outcomes::Outcomes::generate),
+    ("blackjack", blackjack::Blackjack::generate),
 ];
 
 pub const FUNCTION_DOCS: &[(&str, &str)] = &[
@@ -51,6 +56,9 @@ pub const FUNCTION_DOCS: &[(&str, &str)] = &[
     ("Bernoulli / Coin toss", bernoulli::Bernoulli::DOC),
     ("Poisson", poisson::Poisson::DOC),
     ("Add nonzero", add_nonzero::AddNonZero::DOC),
+    ("Poisson", poisson::Poisson::DOC),
+    ("List of outcomes", outcomes::Outcomes::DOC),
+    ("Blackjack", blackjack::Blackjack::DOC),
 ];
 
 pub fn interpret_function(src: &str) -> Result<Expression, DiceError> {

@@ -24,7 +24,7 @@ impl Item {
                     }
                     ui.label(&self.name);
                     ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                        ui.small_button(">")
+                        //ui.small_button(">")
                     });
 
                     // ui.with_layout(Layout::right_to_left(Align::Center), |ui| {

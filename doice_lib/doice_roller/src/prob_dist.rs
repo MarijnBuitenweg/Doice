@@ -526,3 +526,12 @@ impl From<ProbDist> for BTreeMap<Value, f64> {
         dist.0
     }
 }
+
+impl From<SampleDist> for ProbDist {
+    fn from(samples: SampleDist) -> Self {
+        let mut dist = ProbDist::new();
+        dist.0.clear();
+        dist.read_samples(&samples);
+        dist
+    }
+}

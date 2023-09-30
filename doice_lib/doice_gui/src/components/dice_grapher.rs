@@ -477,7 +477,7 @@ impl<const EXP_UPDATE: u64> DiceGrapher<EXP_UPDATE> {
             CurrentPanel::Plot => self.show_chart(ui),
             CurrentPanel::History => self.history.show(ui),
             CurrentPanel::Help => dice_docs(ui),
-            CurrentPanel::Initiative => self.initiator.show(ui),
+            CurrentPanel::Initiative => self.initiator.show_flex(ui),
         }
     }
 

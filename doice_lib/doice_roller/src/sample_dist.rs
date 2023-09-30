@@ -33,6 +33,10 @@ impl SampleDist {
     pub fn clear(&mut self) {
         self.dist.clear();
     }
+
+    pub fn remove_samples(&mut self, bucket: Value) {
+        self.dist.remove(&bucket);
+    }
 }
 
 impl Deref for SampleDist {

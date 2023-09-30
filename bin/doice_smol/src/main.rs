@@ -26,7 +26,7 @@ fn main() {
         transparent: true,
         decorated: false,
         fullscreen: false,
-        initial_window_size: Some(vec2(420.0, 500.0)),
+        initial_window_size: Some(vec2(420.0, 516.0)),
 
         ..Default::default()
     };
