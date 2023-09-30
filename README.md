@@ -3,6 +3,7 @@
 ## Plans for future releases
 
 - Improve the capabilities of the calculator
+- Make more functions capable of taking in random arguments
 - Improve error messages
 - Polish UI
 - Further improve performance
