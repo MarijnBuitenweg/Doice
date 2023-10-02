@@ -16,6 +16,7 @@ mod unit_dick;
 mod poisson;
 mod outcomes;
 mod blackjack;
+mod panic;
 
 pub trait FunctionInit: Rollable {
     const DOC: &'static str;
@@ -42,6 +43,7 @@ const FUNCTION_GENERATORS: &[(&str, FunctionGenerator)] = &[
     ("poisson", poisson::Poisson::generate),
     ("outcomes", outcomes::Outcomes::generate),
     ("blackjack", blackjack::Blackjack::generate),
+    ("panic", panic::Panic::generate),
 ];
 
 pub const FUNCTION_DOCS: &[(&str, &str)] = &[
@@ -59,6 +61,7 @@ pub const FUNCTION_DOCS: &[(&str, &str)] = &[
     ("Poisson", poisson::Poisson::DOC),
     ("List of outcomes", outcomes::Outcomes::DOC),
     ("Blackjack", blackjack::Blackjack::DOC),
+    ("Panic", panic::Panic::DOC),
 ];
 
 pub fn interpret_function(src: &str) -> Result<Expression, DiceError> {
