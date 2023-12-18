@@ -8,7 +8,7 @@ pub struct Panic {}
 impl FunctionInit for Panic {
     const DOC: &'static str = "Will halt and catch fire.\nUsage: panic()";
 
-    fn generate(input: &str) -> Result<Expression, DiceError> {
+    fn generate(_input: &str) -> Result<Expression, DiceError> {
         panic!("The user wants to see the world BURN.")
     }
 }

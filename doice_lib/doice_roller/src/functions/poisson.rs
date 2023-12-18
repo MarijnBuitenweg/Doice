@@ -1,10 +1,10 @@
 use std::collections::BTreeMap;
-use std::mem;
+
 use std::ops::Mul;
 use crate::functions::FunctionInit;
 use crate::{DiceError, ProbDist, Rollable, RollOut};
 use crate::structure::expression::Expression;
-use crate::structure::lin_comb::LinComb;
+
 use crate::structure::num_expresson::NumericExpression;
 
 fn factorial(n: usize) -> f64 {

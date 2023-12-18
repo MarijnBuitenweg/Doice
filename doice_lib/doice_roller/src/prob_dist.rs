@@ -297,9 +297,9 @@ impl ProbDist {
             ))
     }
 
-    pub fn from_parameter_distribution(param_dist: &ProbDist, generator: impl FnMut(isize) -> ProbDist) -> Self {
-        let mut acc = BTreeMap::<isize, f64>::new();
-        for (param, scale) in param_dist.iter() {
+    pub fn from_parameter_distribution(param_dist: &ProbDist, _generator: impl FnMut(isize) -> ProbDist) -> Self {
+        let _acc = BTreeMap::<isize, f64>::new();
+        for (_param, _scale) in param_dist.iter() {
 
         }
         todo!("There must be some better way to do all these BTreeMap transformations, I'm getting tired of them.")

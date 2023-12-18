@@ -24,7 +24,6 @@ use {
 use super::{
     dice_docs::dice_docs,
     dice_history::{DiceHistory, DiceHistoryEntry},
-    initiator::Initiator,
 };
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]

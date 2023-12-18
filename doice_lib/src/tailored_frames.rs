@@ -4,10 +4,10 @@ use doice_gui::{
     eframe::{App, CreationContext},
     Activity, AppData, DCtx,
 };
-use egui::{panel::TopBottomSide, Color32, Frame, Id, Layout, Pos2, Sense, Ui, Vec2, Context};
-use egui_extras::StripBuilder;
+use egui::{Frame, Vec2};
 
-use crate::activities::{CharacterManager, GlobalAnalyzer, Notes, WideAnalyzer};
+
+use crate::activities::{CharacterManager, Notes, WideAnalyzer};
 use crate::draw_topbar;
 
 pub struct TailoredUI {
@@ -40,7 +40,7 @@ impl TailoredUI {
 
 impl App for TailoredUI {
     fn update(&mut self, ctx: &egui::Context, frame: &mut doice_gui::eframe::Frame) {
-        let mut dctx = self.context(0);
+        let _dctx = self.context(0);
         draw_topbar(ctx, frame);
 
         egui::CentralPanel::default().show(ctx, |ui| {

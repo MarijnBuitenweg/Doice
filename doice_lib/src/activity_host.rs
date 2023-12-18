@@ -1,12 +1,12 @@
-use std::panic::{AssertUnwindSafe, catch_unwind, UnwindSafe};
+use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::rc::Rc;
-use std::sync::Arc;
-use std::task::Context;
+
+
 use dyn_clone::DynClone;
 use doice_gui::{Activity, AppData, DCtx, eframe};
 
 use eframe::egui;
-use egui::{Frame, Key};
+use egui::{Key};
 use instant::Duration;
 use crate::draw_topbar;
 
@@ -41,7 +41,7 @@ impl ActivityHost {
     fn context(&self) -> DCtx {
         DCtx::new(Some(0), false, 0, Rc::clone(&self.data))
     }
-    fn update_logic(&mut self,  ctx: &egui::Context, frame: &mut eframe::Frame) {
+    fn update_logic(&mut self,  ctx: &egui::Context, _frame: &mut eframe::Frame) {
         if !self.focused {
             self.act.as_mut().unwrap().focus();
             self.focused = true;
@@ -67,7 +67,7 @@ impl ActivityHost {
         }
     }
 
-    fn show_error_screen(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+    fn show_error_screen(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.centered_and_justified(|ui| {
                 ui.heading("Something went wrong.\nPlease press F to restart.");

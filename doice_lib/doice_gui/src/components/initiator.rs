@@ -1,5 +1,5 @@
 use eframe::{
-    egui::{self, collapsing_header::CollapsingState, DragValue, Id, Key, Layout, TextEdit, Ui},
+    egui::{DragValue, Id, Key, Layout, TextEdit, Ui},
     emath::Align,
 };
 use egui_dnd::{utils::shift_vec, DragDropItem, DragDropUi};
@@ -23,7 +23,7 @@ impl Item {
                         self.remove = true;
                     }
                     ui.label(&self.name);
-                    ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    ui.with_layout(Layout::right_to_left(Align::Center), |_ui| {
                         //ui.small_button(">")
                     });
 
