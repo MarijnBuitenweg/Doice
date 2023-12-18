@@ -9,5 +9,5 @@ edition = "2021"
 wasm_comp = ["getrandom/js"]
 
 [dependencies]
-getrandom = "0.2.7"
-rand = { version = "0.8.5", features = ["nightly"] }
+getrandom = { workspace = true }
+rand = { workspace = true, features = ["nightly"] }

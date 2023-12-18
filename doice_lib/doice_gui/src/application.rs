@@ -1,7 +1,7 @@
-use std::{rc::Rc, sync::RwLock};
+use std::{process, rc::Rc, sync::RwLock};
 
 use eframe::{
-    egui::{self, Context, Id, RichText, Ui},
+    egui::{self, Context, Id, RichText, Ui, ViewportCommand},
     emath::Align,
     epaint::Color32,
 };
@@ -213,10 +213,6 @@ impl eframe::App for DoiceApp {
         std::time::Duration::from_secs(30)
     }
 
-    fn max_size_points(&self) -> egui::Vec2 {
-        egui::Vec2::INFINITY
-    }
-
     fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
         // NOTE: a bright gray makes the shadows of the windows look weird.
         // We use a bit of transparency so that if the user switches on the
@@ -226,16 +222,8 @@ impl eframe::App for DoiceApp {
         // _visuals.window_fill() would also be a natural choice
     }
 
-    fn persist_native_window(&self) -> bool {
-        true
-    }
-
     fn persist_egui_memory(&self) -> bool {
         true
-    }
-
-    fn warm_up_enabled(&self) -> bool {
-        false
     }
 }
 
@@ -608,7 +596,7 @@ impl Taskbar {
 
                 // Exit on click
                 if exit.clicked() {
-                    frame.close();
+                    ui.ctx().send_viewport_cmd(ViewportCommand::Close);
                 }
             });
         });

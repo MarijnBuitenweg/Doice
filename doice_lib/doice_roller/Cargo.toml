@@ -10,10 +10,10 @@ wasm_comp = ["getrandom/js", "instant/wasm-bindgen", "doice_utils/wasm_comp"]
 
 [dependencies]
 doice_utils = { version = "0.1.0", path = "../doice_utils" }
-dyn-clone = "1.0.14"
-egui = "0.22.0"
-getrandom = "0.2.7"
-instant = "0.1.12"
-itertools = "0.10.3"
-rand = { version = "0.8.5", features = ["nightly"] }
-rayon = { version = "1.5.3", optional = true }
+dyn-clone = { workspace = true }
+egui = { workspace = true }
+getrandom = { workspace = true }
+instant = { workspace = true }
+itertools = { workspace = true }
+rand = { workspace = true, features = ["nightly"] }
+rayon = { workspace = true, optional = true }

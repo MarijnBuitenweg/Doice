@@ -1,17 +1,16 @@
-use std::panic::{AssertUnwindSafe, catch_unwind};
+use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::rc::Rc;
 
-
+use doice_gui::{eframe, Activity, AppData, DCtx};
 use dyn_clone::DynClone;
-use doice_gui::{Activity, AppData, DCtx, eframe};
 
-use eframe::egui;
-use egui::{Key};
-use instant::Duration;
 use crate::draw_topbar;
+use eframe::egui;
+use egui::Key;
+use instant::Duration;
 
 trait CloneActivity: Activity + DynClone {}
-impl<T: Activity + DynClone> CloneActivity for T{}
+impl<T: Activity + DynClone> CloneActivity for T {}
 
 /// Back again
 pub struct ActivityHost {
@@ -24,7 +23,9 @@ pub struct ActivityHost {
 
 impl ActivityHost {
     // Create a new activityhost hosting the provided activity
-    pub fn new<T: CloneActivity + Clone + Default + 'static>(cc: &eframe::CreationContext<'_>) -> Self {
+    pub fn new<T: CloneActivity + Clone + Default + 'static>(
+        cc: &eframe::CreationContext<'_>,
+    ) -> Self {
         let mut act: Box<(dyn CloneActivity + 'static)> = Box::<T>::default();
         let backup_act = dyn_clone::clone_box(&*act);
         let ctx = cc.egui_ctx.clone();
@@ -41,7 +42,7 @@ impl ActivityHost {
     fn context(&self) -> DCtx {
         DCtx::new(Some(0), false, 0, Rc::clone(&self.data))
     }
-    fn update_logic(&mut self,  ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    fn update_logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         if !self.focused {
             self.act.as_mut().unwrap().focus();
             self.focused = true;
@@ -56,8 +57,12 @@ impl ActivityHost {
                 });
                 act
             })) {
-                Ok(act) => { self.act = Some(act); }
-                Err(_) => { self.errored_out = true; }
+                Ok(act) => {
+                    self.act = Some(act);
+                }
+                Err(_) => {
+                    self.errored_out = true;
+                }
             }
         } else {
             egui::CentralPanel::default().show(&nu_ctx, |ui| {
@@ -101,10 +106,6 @@ impl eframe::App for ActivityHost {
         Duration::from_secs(30)
     }
 
-    fn max_size_points(&self) -> egui::Vec2 {
-        egui::Vec2::INFINITY
-    }
-
     fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
         // NOTE: a bright gray makes the shadows of the windows look weird.
         // We use a bit of transparency so that if the user switches on the
@@ -112,17 +113,5 @@ impl eframe::App for ActivityHost {
         egui::Color32::from_rgba_unmultiplied(12, 12, 12, 180).to_normalized_gamma_f32()
 
         // _visuals.window_fill() would also be a natural choice
-    }
-
-    fn persist_native_window(&self) -> bool {
-        true
-    }
-
-    fn persist_egui_memory(&self) -> bool {
-        true
-    }
-
-    fn warm_up_enabled(&self) -> bool {
-        false
     }
 }
