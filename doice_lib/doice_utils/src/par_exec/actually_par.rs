@@ -1,6 +1,13 @@
-use std::{sync::{mpsc::{Receiver, Sender, channel}, Arc, Mutex, atomic::{AtomicU32, Ordering}}, cell::Cell};
+use std::{
+    cell::Cell,
+    sync::{
+        atomic::{AtomicU32, Ordering},
+        mpsc::{channel, Receiver, Sender},
+        Arc, Mutex,
+    },
+};
 
-use super::{Notifier, proc_config::ProcessConfig};
+use super::{proc_config::ProcessConfig, Notifier};
 
 /// Executes tasks yielding Out in parallel, and yields only the most recently started one
 /// It adds approx 50us to the execution time of the given task, so it's best to use it for expensive computations
@@ -160,24 +167,24 @@ mod tests {
 
     extern crate test;
 
-    #[bench]
-    fn startup_bench(b: &mut test::Bencher) {
-        b.iter(|| {
-            test::black_box(ParExecutor::<f64>::new());
-        });
-    }
+    // #[bench]
+    // fn startup_bench(b: &mut test::Bencher) {
+    //     b.iter(|| {
+    //         test::black_box(ParExecutor::<f64>::new());
+    //     });
+    // }
 
-    #[bench]
-    fn proc_bench(b: &mut test::Bencher) {
-        let mut exec = ParExecutor::<f64>::new();
-        b.iter(|| {
-            for i in 0..1000 {
-                exec.process_into(i as f32);
-                test::black_box(
-                    exec.get_data()
-                        .expect("no process in flight after process was started"),
-                );
-            }
-        });
-    }
+    // #[bench]
+    // fn proc_bench(b: &mut test::Bencher) {
+    //     let mut exec = ParExecutor::<f64>::new();
+    //     b.iter(|| {
+    //         for i in 0..1000 {
+    //             exec.process_into(i as f32);
+    //             test::black_box(
+    //                 exec.get_data()
+    //                     .expect("no process in flight after process was started"),
+    //             );
+    //         }
+    //     });
+    // }
 }

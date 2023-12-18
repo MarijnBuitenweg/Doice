@@ -181,7 +181,6 @@ impl ProbDist {
             let first = entries.next().unwrap();
             // Pd(X = min) = 1 - P(X >= min + 1)^2
             *first = 1.0 - (1.0 - cumulative.next().unwrap()).powi(2);
-            dbg!(*first);
             total_below += *first;
 
             for (val, cumul) in entries.zip(cumulative) {
@@ -297,11 +296,12 @@ impl ProbDist {
             ))
     }
 
-    pub fn from_parameter_distribution(param_dist: &ProbDist, _generator: impl FnMut(isize) -> ProbDist) -> Self {
+    pub fn from_parameter_distribution(
+        param_dist: &ProbDist,
+        _generator: impl FnMut(isize) -> ProbDist,
+    ) -> Self {
         let _acc = BTreeMap::<isize, f64>::new();
-        for (_param, _scale) in param_dist.iter() {
-
-        }
+        for (_param, _scale) in param_dist.iter() {}
         todo!("There must be some better way to do all these BTreeMap transformations, I'm getting tired of them.")
     }
 }

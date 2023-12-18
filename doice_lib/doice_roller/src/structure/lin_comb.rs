@@ -109,11 +109,11 @@ impl FromStr for LinComb {
                         let take = first || !(['+', '-'].contains(c) && term_fin);
                         term_fin = !['/', '*'].contains(c);
                         first = false;
-                        dbg!(take)
+                        take
                     })
                     .last();
                 first = true;
-                dbg!(last)
+                last
             })
             .map(|(i, _)| i as isize);
 
@@ -125,7 +125,6 @@ impl FromStr for LinComb {
             // start is exclusive, end inclusive
             .map(|(start, end)| {
                 let s = &src[((start + 1) as usize)..=(end as usize)];
-                dbg!(s);
                 s.parse()
             })
             .collect::<Result<_, _>>()?;

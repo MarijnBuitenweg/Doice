@@ -12,3 +12,10 @@ wasm_comp = []
 itertools = { workspace = true }
 rayon = { workspace = true, optional = true }
 strsim = { workspace = true }
+
+[dev-dependencies]
+criterion.workspace = true
+
+[[bench]]
+name = "par-exec"
+harness = false

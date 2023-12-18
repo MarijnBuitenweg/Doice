@@ -87,7 +87,7 @@ impl FromStr for Term {
         }
 
         // Trim the term for simplicity and safety
-        let mut src = dbg!(src.trim());
+        let mut src = src.trim();
 
         let first_char = src.as_bytes()[0].into();
         let sign = match first_char {
