@@ -296,6 +296,14 @@ impl ProbDist {
                 },
             ))
     }
+
+    pub fn from_parameter_distribution(param_dist: &ProbDist, generator: impl FnMut(isize) -> ProbDist) -> Self {
+        let mut acc = BTreeMap::<isize, f64>::new();
+        for (param, scale) in param_dist.iter() {
+
+        }
+        todo!("There must be some better way to do all these BTreeMap transformations, I'm getting tired of them.")
+    }
 }
 
 impl Default for ProbDist {

@@ -49,7 +49,6 @@ const FUNCTION_GENERATORS: &[(&str, FunctionGenerator)] = &[
 pub const FUNCTION_DOCS: &[(&str, &str)] = &[
     ("Empower", empower::Empower::DOC),
     ("Stat roll", stat_roll::StatRoller::DOC),
-    ("The shaft", unit_dick::UnitDick::DOC),
     ("Advantage", adv::Adv::DOC),
     ("Sum", sum::Sum::DOC),
     ("Critical attack damage", Crit::DOC),
@@ -58,7 +57,6 @@ pub const FUNCTION_DOCS: &[(&str, &str)] = &[
     ("Bernoulli / Coin toss", bernoulli::Bernoulli::DOC),
     ("Poisson", poisson::Poisson::DOC),
     ("Add nonzero", add_nonzero::AddNonZero::DOC),
-    ("Poisson", poisson::Poisson::DOC),
     ("List of outcomes", outcomes::Outcomes::DOC),
     ("Blackjack", blackjack::Blackjack::DOC),
     ("Panic", panic::Panic::DOC),
