@@ -24,7 +24,9 @@ impl FunctionInit for Crit {
     }
 }
 
+/// Implements the `Rollable` trait for the `Crit` struct.
 impl Rollable for Crit {
+    /// Rolls the dice and returns the result as a `RollOut` struct.
     fn roll(&self) -> RollOut {
         let mut txt_out = Layouter::new();
         txt_out.append("[");
@@ -46,6 +48,7 @@ impl Rollable for Crit {
         }
     }
 
+    /// Calculates the probability distribution of the `Crit` struct.
     fn dist(&self) -> ProbDist {
         self.bruteforce_probdist()
     }
