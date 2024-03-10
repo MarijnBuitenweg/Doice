@@ -125,7 +125,7 @@ impl FromStr for Roll {
     /// Attempts to parse the str into an expression
     fn from_str(src: &str) -> Result<Self, Self::Err> {
         Ok(Roll {
-            root: dbg!(LinComb::from_str(src)?.into()),
+            root: LinComb::from_str(src)?.into(),
         })
     }
 }

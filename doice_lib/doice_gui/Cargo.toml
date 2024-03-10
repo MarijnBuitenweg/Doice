@@ -9,14 +9,20 @@ edition = "2021"
 rayon = ["dnd_data/rayon", "doice_roller/rayon"]
 # For some reason removing the connection between this include_data and dnd_data/include_data is the only way to not include data
 include_data = ["dnd_data/include_data"]
-wasm_comp = ["doice_roller/wasm_comp", "instant/wasm-bindgen", "dnd_data/wasm_comp", "doice_utils/wasm_comp"]
+wasm_comp = [
+    "doice_roller/wasm_comp",
+    "instant/wasm-bindgen",
+    "dnd_data/wasm_comp",
+    "doice_utils/wasm_comp",
+]
 
 [dependencies]
 dnd_data = { version = "0.1.0", path = "../dnd_data" }
-doice_roller = { version = "0.1.0", path = "../doice_roller"}
+doice_roller = { version = "0.1.0", path = "../doice_roller" }
 doice_utils = { version = "0.1.0", path = "../doice_utils" }
-dyn-clone = "1.0.6"
-eframe = { version = "0.22.0", optional = true }
-instant = "0.1.12"
-itertools = "0.10.3"
-egui_dnd = "0.4.0"
+dyn-clone = { workspace = true }
+eframe = { workspace = true, optional = true }
+egui_plot = { workspace = true }
+instant = { workspace = true }
+itertools = { workspace = true }
+egui_dnd = { workspace = true }

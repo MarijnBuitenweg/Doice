@@ -10,13 +10,13 @@ include_data = []
 wasm_comp = []
 
 [dependencies]
-bitflags = "1.3.2"
+bitflags = { workspace = true }
 doice_utils = { version = "0.1.0", path = "../doice_utils" }
-egui = "0.22.0"
-include_dir = "0.7.2"
+egui = { workspace = true }
+include_dir = { workspace = true }
 #instant = { git = "https://github.com/sebcrozet/instant", version = "0.1.12", features = ["wasm-bindgen"], optional = true }
-itertools = "0.10.3"
-rayon = { version = "1.5.3", optional = true }
-serde = { version = "1.0.138", features = ["derive", "unstable"] }
-serde_json = { version = "1.0.82", features = ["preserve_order"] }
-serde_yaml = "0.9.16"
+itertools = { workspace = true }
+rayon = { workspace = true, optional = true }
+serde = { workspace = true, features = ["derive", "unstable"] }
+serde_json = { workspace = true, features = ["preserve_order"] }
+serde_yaml = { workspace = true }

@@ -29,7 +29,7 @@ impl Rollable for BettingMagic {
     fn roll(&self) -> crate::RollOut {
         let roller = DiceRoller::from_str("2d6").unwrap();
         let mut own_chips = 0;
-        let point_roll = roller.roll_quiet();
+        let _point_roll = roller.roll_quiet();
 
         let point = match roller.roll_quiet() {
             2 => 0,

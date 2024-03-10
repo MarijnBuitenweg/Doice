@@ -1,4 +1,4 @@
-# Doice: a dice-rolling program that got slightly out of hand.
+# Doice: a dice-rolling program.
 
 ## Plans for future releases
 

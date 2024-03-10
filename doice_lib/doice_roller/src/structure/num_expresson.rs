@@ -1,5 +1,5 @@
 use std::str::FromStr;
-use crate::{DiceError, ProbDist, Rollable, RollOut};
+use crate::{DiceError, Rollable};
 use crate::structure::expression::Expression;
 use crate::structure::lin_comb::LinComb;
 

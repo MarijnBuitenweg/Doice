@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use doice_lib::{
-    activities::{eframe::IconData, *},
+    activities::{egui::IconData, *},
     TailoredUI,
 };
 
@@ -23,10 +23,16 @@ struct Cli {
 fn gui_fullscreen_main() {
     // Set options
     let options = eframe::NativeOptions {
-        min_window_size: Some(egui::vec2(320.0, 100.0)),
-        transparent: true,
-        decorated: false,
-        fullscreen: true,
+        viewport: egui::ViewportBuilder::default()
+            .with_min_inner_size((320.0, 100.0))
+            .with_icon(IconData {
+                rgba: LOGO.to_vec(),
+                width: 256,
+                height: 256,
+            })
+            .with_transparent(true)
+            .with_decorations(false)
+            .with_fullscreen(false),
         ..Default::default()
     };
 
@@ -52,13 +58,18 @@ fn gui_fullscreen_main() {
 fn gui_analyzer_only() {
     // Set options
     let options = eframe::NativeOptions {
-        min_window_size: Some(egui::vec2(320.0, 100.0)),
-        transparent: false,
-        decorated: true,
-        maximized: false,
-        resizable: false,
-        initial_window_size: Some(egui::vec2(600.0, 670.0)),
-        icon_data: Some(IconData::try_from_png_bytes(LOGO).unwrap()),
+        viewport: egui::ViewportBuilder::default()
+            .with_min_inner_size((320.0, 100.0))
+            .with_inner_size((600.0, 670.0))
+            .with_icon(IconData {
+                rgba: LOGO.to_vec(),
+                width: 256,
+                height: 256,
+            })
+            .with_transparent(false)
+            .with_decorations(true)
+            .with_resizable(false)
+            .with_fullscreen(false),
         ..Default::default()
     };
 
@@ -81,11 +92,16 @@ fn gui_main() {
 fn tailor_test_main() -> eframe::Result<()> {
     // Set options
     let options = eframe::NativeOptions {
-        min_window_size: Some(egui::vec2(320.0, 100.0)),
-        icon_data: Some(IconData::try_from_png_bytes(LOGO).unwrap()),
-        transparent: true,
-        decorated: false,
-        fullscreen: false,
+        viewport: egui::ViewportBuilder::default()
+            .with_min_inner_size((320.0, 100.0))
+            .with_icon(IconData {
+                rgba: LOGO.to_vec(),
+                width: 256,
+                height: 256,
+            })
+            .with_transparent(true)
+            .with_decorations(false)
+            .with_fullscreen(false),
         ..Default::default()
     };
 

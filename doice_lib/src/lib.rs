@@ -1,18 +1,18 @@
 /// Contains all activities
 pub mod activities;
-/// Contains UI setup tailored for ease of use.
-/// It is here instead of in doice_gui, because it is not component agnostic like the other ui layouts (and as such depends on the specific ui components).
-mod tailored_frames;
 /// A rudimentary application window that can run an activity
 #[cfg(feature = "eframe")]
 pub mod activity_host;
+/// Contains UI setup tailored for ease of use.
+/// It is here instead of in doice_gui, because it is not component agnostic like the other ui layouts (and as such depends on the specific ui components).
+mod tailored_frames;
 
-use egui::{Id, Layout, Sense};
-use egui::panel::TopBottomSide;
+use doice_gui::eframe::egui::Context;
 use doice_gui::eframe::emath::{Pos2, Vec2};
 use doice_gui::eframe::epaint::Color32;
 use doice_gui::eframe::Frame;
-use doice_gui::eframe::egui::Context;
+use egui::panel::TopBottomSide;
+use egui::{Id, Layout, Sense, ViewportCommand};
 pub use tailored_frames::TailoredUI;
 
 pub fn draw_topbar(ctx: &Context, frame: &mut Frame) {
@@ -23,12 +23,15 @@ pub fn draw_topbar(ctx: &Context, frame: &mut Frame) {
             Sense::click_and_drag(),
         );
         if mainbar.drag_started() {
-            frame.drag_window()
+            ctx.send_viewport_cmd(ViewportCommand::StartDrag);
         }
         if mainbar.double_clicked() {
-            frame.set_window_pos(Pos2::new(0.0, 0.0));
-            let monitor = frame.info().window_info.monitor_size.unwrap();
-            frame.set_window_size(Vec2::from((monitor.x / 2.0, monitor.y)));
+            ctx.send_viewport_cmd(ViewportCommand::OuterPosition(Pos2::new(0.0, 0.0)));
+            let monitor = ctx.input(|i| i.viewport().monitor_size.unwrap());
+            ctx.send_viewport_cmd(ViewportCommand::InnerSize(Vec2::from((
+                monitor.x / 2.0,
+                monitor.y,
+            ))));
         }
 
         egui::menu::bar(ui, |ui| {
@@ -39,10 +42,10 @@ pub fn draw_topbar(ctx: &Context, frame: &mut Frame) {
                 let exit_button = egui::widgets::Button::new("Exit").fill(Color32::DARK_RED);
 
                 if ui.add(exit_button).clicked() {
-                    frame.close()
+                    ctx.send_viewport_cmd(ViewportCommand::Close);
                 }
                 if ui.add(minimize_button).clicked() {
-                    frame.set_minimized(true);
+                    ctx.send_viewport_cmd(ViewportCommand::Minimized(true));
                 }
             })
         })

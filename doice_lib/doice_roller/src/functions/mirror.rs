@@ -30,8 +30,7 @@ impl Rollable for Mirror {
         let expr_out = self.expr.roll();
         txt += expr_out.txt;
         txt.append(")*[");
-        let sign = dbg!(self.mirror.roll_quiet());
-        dbg!(&self.mirror);
+        let sign = self.mirror.roll_quiet();
         txt.append(&(sign.to_string() + "])"));
 
         RollOut {

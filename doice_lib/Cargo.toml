@@ -9,13 +9,18 @@ edition = "2021"
 rayon = ["doice_gui/rayon", "doice_utils/rayon"]
 include_data = ["doice_gui/include_data"]
 eframe = ["doice_gui/eframe"]
-wasm_comp = ["doice_legacy/wasm_comp", "doice_gui/wasm_comp", "doice_utils/wasm_comp"]
+wasm_comp = [
+    "doice_legacy/wasm_comp",
+    "doice_gui/wasm_comp",
+    "doice_utils/wasm_comp",
+]
 
 [dependencies]
 doice_gui = { version = "0.1.0", path = "doice_gui" }
 doice_legacy = { version = "0.1.0", path = "doice_legacy" }
 doice_utils = { version = "0.1.0", path = "doice_utils" }
-egui = "0.22.0"
-egui_extras = "0.22.0"
-rand = { version = "0.8.5", features = ["nightly"] }
-instant = "0.1.12"
+dyn-clone = { workspace = true }
+egui = { workspace = true }
+egui_extras = { workspace = true }
+rand = { workspace = true, features = ["nightly"] }
+instant = { workspace = true }

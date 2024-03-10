@@ -4,11 +4,13 @@ use bitflags::bitflags;
 
 use doice_utils::Named;
 
+
 bitflags! {
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub struct UpdateMoment: u8 {
         const LR = 0x01;
         const SR = 0x02;
-        const AR = Self::LR.bits | Self::SR.bits;
+        const AR = Self::LR.bits() | Self::SR.bits();
         const MANUAL = 0x04;
     }
 }

@@ -84,7 +84,7 @@ impl FunctionInit for Attack {
         Ok(Attack {
             rolls: DiceRoller::from_str(dmg_roll).unwrap().into(),
             dmg_bonus: dmg_bonus.trim().parse().or(Err("invalid dmg bonus"))?,
-            d20: dbg!(if adv { "d|" } else { "d" }.parse()).unwrap(),
+            d20: if adv { "d|" } else { "d" }.parse().unwrap(),
             ac: ac_txt.trim().parse().or(Err("invalid ac"))?,
             to_hit_bonus: to_hit_bonus
                 .trim()

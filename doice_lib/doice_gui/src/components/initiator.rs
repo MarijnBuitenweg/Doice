@@ -1,10 +1,10 @@
 use eframe::{
-    egui::{self, collapsing_header::CollapsingState, DragValue, Id, Key, Layout, TextEdit, Ui},
+    egui::{DragValue, Id, Key, Layout, TextEdit, Ui},
     emath::Align,
 };
-use egui_dnd::{utils::shift_vec, DragDropItem, DragDropUi};
+use egui_dnd::{dnd, utils::shift_vec, DragDropItem};
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Hash)]
 struct Item {
     id: usize,
     name: String,
@@ -23,7 +23,7 @@ impl Item {
                         self.remove = true;
                     }
                     ui.label(&self.name);
-                    ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    ui.with_layout(Layout::right_to_left(Align::Center), |_ui| {
                         //ui.small_button(">")
                     });
 
@@ -65,18 +65,18 @@ impl Item {
     }
 }
 
-impl DragDropItem for Item {
-    fn id(&self) -> Id {
-        Id::new(self.id)
-    }
-}
+// impl DragDropItem for Item {
+//     fn id(&self) -> Id {
+//         Id::new(self.id)
+//     }
+// }
 
 #[derive(Default, Clone)]
 pub struct Initiator {
     pre_item: Item,
     innit_text: String,
     list: Vec<Item>,
-    dnd: DragDropUi,
+    //dnd: DragDropUi,
     current: Option<isize>,
     clear_confirm: bool,
 }
@@ -171,18 +171,16 @@ impl Initiator {
         });
 
         // The list
-        let response = self
-            .dnd
-            .ui::<Item>(ui, self.list.iter_mut(), |item, ui, handle| {
-                ui.horizontal(|ui| {
-                    handle.ui(ui, item, |ui| {
-                        ui.label("::");
-                    });
-                    item.show(ui);
+        let response = dnd(ui, "aaaaah").show(self.list.iter_mut(), |ui, item, handle, state| {
+            ui.horizontal(|ui| {
+                handle.ui(ui, |ui| {
+                    ui.label("::");
                 });
+                item.show(ui);
             });
+        });
 
-        if let Some(response) = response.completed {
+        if let Some(response) = response.final_update() {
             shift_vec(response.from, response.to, &mut self.list);
         }
 
@@ -264,18 +262,16 @@ impl Initiator {
         });
 
         // The list
-        let response = self
-            .dnd
-            .ui::<Item>(ui, self.list.iter_mut(), |item, ui, handle| {
-                ui.horizontal(|ui| {
-                    handle.ui(ui, item, |ui| {
-                        ui.label("::");
-                    });
-                    item.show(ui);
+        let response = dnd(ui, "aaaah").show(self.list.iter_mut(), |ui, item, handle, state| {
+            ui.horizontal(|ui| {
+                handle.ui(ui, |ui| {
+                    ui.label("::");
                 });
+                item.show(ui);
             });
+        });
 
-        if let Some(response) = response.completed {
+        if let Some(response) = response.final_update() {
             shift_vec(response.from, response.to, &mut self.list);
         }
 

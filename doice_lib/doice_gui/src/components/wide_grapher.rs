@@ -8,13 +8,12 @@ use instant::Instant;
 
 use eframe::{
     egui::epaint::text::LayoutJob,
-    egui::{
-        plot::{Bar, BarChart, Plot, VLine},
-        Context, DragValue, Key, Layout, Modifiers, RichText, Ui,
-    },
+    egui::{Context, DragValue, Key, Layout, Modifiers, RichText, Ui},
     emath::Align,
     epaint::Color32,
 };
+
+use egui_plot::{Bar, BarChart, Plot, VLine};
 
 use {
     doice_roller::{DiceError, Layouter, ProbDist, Roll, RollOut, Rollable, SampleDist},
@@ -24,7 +23,6 @@ use {
 use super::{
     dice_docs::dice_docs,
     dice_history::{DiceHistory, DiceHistoryEntry},
-    initiator::Initiator,
 };
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
